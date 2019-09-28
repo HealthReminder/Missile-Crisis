@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
+  m_Name: PhotonServerSettings
+  m_EditorClassIdentifier: 
+  AppSettings:
+    AppIdRealtime: 911f570d-26bc-40ee-9ac9-dd768a7e59ca
+    AppIdChat: 
+    AppIdVoice: 
+    AppVersion: 
+    UseNameServer: 1
+    FixedRegion: 
+    Server: 
+    Port: 0
+    Protocol: 0
+    EnableLobbyStatistics: 0
+    NetworkLogging: 1
+  StartInOfflineMode: 0
+  PunLogging: 0
+  EnableSupportLogger: 0
+  RunInBackground: 1
+  RpcList:
+  - DestroySpaceship
+  - Fire
+  - RespawnSpaceship
+  - RPC_AddPlayer
+  - RPC_ChangeHP
+  - RPC_ConsumeFood
+  - RPC_CreatePlayer
+  - RPC_PlayerSetup
+  - UpdateData
+  - RPC_Die
+  - RPC_DestroySomething
+  - RPC_PushSomething
+  - RPC_ActivateSomething
+  - RPC_PostEmote
+  - RPC_OnActivatedObject
+  - RPC_OnCollisionObject
+  - RPC_OnTriggeredObject
+  - RPC_OnPickedUpObject
+  - RPC_OnDroppedObject
+  - RPC_ShootWeapon
+  - RPC_SynchronizeMonobehaviour
+  - RPC_SynchronizeBehaviour
+  - RPC_SynchronizePlayers
+  - RPC_SynchronizePlayer
+  - RPC_Jump
+  - RPC_Move
+  - RPC_Revive
+  - RPC_Clear_States
+  - RPC_Receive_State
+  - RPC_Send_State
+  - RPC_ChooseCharacter
+  - RPC_StartGame
+  - RPC_DisableStartInput
+  - RPC_SetMasterClient
+  - RPC_PostNotification
+  - RPC_EndEnemyEncounter
+  - RPC_NewEnemyEncounter
+  - RPC_AdventureNext
+  - RPC_AdventureStart
+  - RPC_ToggleNextInput
+  - RPC_TogglePlayersCombat
+  - RPC_GetHit
+  - RPC_AddEntry
+  - RPC_EndEncounter
+  - RPC_NewEvent
+  - RPC_HitEnemy
+  DisableAutoOpenWizard: 1
+  ShowSettings: 1

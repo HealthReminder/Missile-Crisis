@@ -1,0 +1,14 @@
+{
+  "ProjectFilePath": "b:\\Projetos\\2019\\2\\Prototypes\\DontStarve\\PhotonUnityNetworking.Utilities.Culling.Editor.csproj",
+  "TargetFramework": "v4.7.1",
+  "TagHelpers": [],
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  }
+}
