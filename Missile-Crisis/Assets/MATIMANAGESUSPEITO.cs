@@ -9,8 +9,8 @@ public class MATIMANAGESUSPEITO : MonoBehaviour
     public StaticMap[,] current_static_map;
     public DynamicMap[,] current_dynamic_map;
 
-    [Range(0,1)]
-    public float land_percentage;
+    [Range(0,100)]
+    public int land_percentage;
     private void Start() {
         if(is_showcasing)
             StartCoroutine(ShowcaseRoutine());

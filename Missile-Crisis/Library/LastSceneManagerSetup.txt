@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/matchViewandMapGeneratpr.unity
+- path: Assets/_Scenes/MenuScene.unity
   isLoaded: 1
   isActive: 1

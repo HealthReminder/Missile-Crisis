@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-B:/Projetos/2019/2/Multiplayer-Dungeon-Adventure/Builds/DelayedStartMultiplayerProjectTemplate.exe
+B:/Projetos/2019/3/Missile-Crisis-New/Builds/DelayedStartMultiplayerProjectTemplate.exe
 SceneListBegin?
 Assets/_Scenes/MenuScene.unity
 Assets/_Scenes/MultiplayerScene.unity
@@ -22,7 +22,6 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.G
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 201e3fde670b00545944bb3db215c80a UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 ee1dba1a186ac062d564e9eb73a1c56f PhotonUnityNetworking.Utilities.dll:Photon.Pun.UtilityScripts.GraphicToggleIsOnTransition
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Serialization
 3ba023cd67d72cace33969ab863e0fd4 PhotonUnityNetworking.Utilities.dll:Photon.Pun.UtilityScripts.PhotonStatsGui
 8ae3331b163cc121825eeed3975d6c4d Assembly-CSharp-firstpass.dll:.ChatGui
 9362d986dc1d503c816595ca38004a4c Assembly-CSharp.dll:.MultiplayerSettings
@@ -142,8 +141,9 @@ b25c2463ba9144686d18d7707733226b Assembly-CSharp-firstpass.dll:.NamePickGui
 e7aa62e1f291228958626e122c23c8f0 PhotonUnityNetworking.Utilities.dll:Photon.Pun.UtilityScripts.ConnectAndJoinRandom
 303ad70ce203ad874efe2965d0fbcff9 Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsEventTracker
 7fb9de8dcf73854b6b328eca1f7a6e6d Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsTracker
+93225451193cbffce2fa6c84e1110d0d Assembly-CSharp.dll:.MatchManager
 94017dcc9f00fe671ea7dc427b4da011 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
-4a770d73306e833bea912b43a058ff16 Assembly-CSharp.dll:.MATIMANAGESUSPEITO
+cd2e31a629fede36135da0ae6b8e3a75 Assembly-CSharp.dll:.MATIMANAGESUSPEITO
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.GameController
 54bd3b36bc94326e8aacfe864b9dcf21 Assembly-CSharp.dll:.BoardCell
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
@@ -225,4 +225,3 @@ d9864ada3db659b8d6f66a20aff414b3 PhotonUnityNetworking.dll:Photon.Pun.PhotonView
 fee4aa1621dff2bebfa2bc3ad56ff95f Assembly-CSharp.dll:.PlayerManagerOLD
 4fb10ee25ec864c6bc038c2a00edace9 Assembly-CSharp.dll:.LobbyView
 c8283c7732e3b6aa70d28f1fed4430ca PhotonUnityNetworking.Utilities.dll:Photon.Pun.UtilityScripts.CountdownTimer
-93225451193cbffce2fa6c84e1110d0d Assembly-CSharp.dll:.MatchManager

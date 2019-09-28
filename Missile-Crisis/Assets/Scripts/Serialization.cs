@@ -29,111 +29,21 @@ public static class Serialization
     }
     #endregion
     #region MatchManager
-    public static byte[] SerializeMatchData(MatchData g_data) {
-        //Create an array of the arrays you wanna serialize together
-        //byte[][] arrays = new byte[1][];
-        //Serialize map
-        int map_x = g_data.map.GetLength(0);
-        int map_y = g_data.map.GetLength(1);
-        //Get bytes from all the map cells
-        List<byte[]> all_cell_bytes = new List<byte[]>();
-
-
-        for (int y = 0; y < map_y; y++)
-            for (int x = 0; x < map_x; x++)
-                all_cell_bytes.Add(SerializeMapCell(g_data.map[x,y]));
-        //There cannot be more than 255 arrays concatenated together so lets separate them
-        int size_limit = 4;
-        int current_index = 0;
-        List<List<byte[]>> lists_cell_bytes = new List<List<byte[]>>();
-        List<byte[]> current_list = new List<byte[]>();
-        for (int i = 0; i < all_cell_bytes.Count; i++)
-        {
-            current_list.Add(all_cell_bytes[i]);
-            current_index ++;
-            if(current_index >= size_limit){
-                current_index = 0;
-                lists_cell_bytes.Add(current_list);
-                current_list = new List<byte[]>();
-                //Debug.Log("Serialized a list!");
-            }
-        }
-        //Debug.Log("Separated arrays! "+lists_cell_bytes.Count);
-        //Now we have a list A of lists B
-        //List B is a list of byte[]
-        //Those byte[] are the data for the map cells
-        List<byte[]> concatenated_cell_bytes = new List<byte[]>();
-        for (int o = 0; o < lists_cell_bytes.Count; o++){
-            concatenated_cell_bytes.Add(ArrayConcatenation.MergeArrays(lists_cell_bytes[o].ToArray()));
-            //Debug.Log(lists_cell_bytes[o].Count);
-        }
-        //Debug.Log("Concatenated bytes! "+concatenated_cell_bytes.Count);
-
-        //Get size of map
-        //byte[][] map_size_array = new byte[2][];
-        //map_size_array[0] = BitConverter.GetBytes(map_x);
-        //map_size_array[1] = BitConverter.GetBytes(map_y);
-        //byte[] map_size_bytes = ArrayConcatenation.MergeArrays(map_size_array);
-        //concatenated_cell_bytes.Add(map_size_bytes);
-
-        //for (int i = 0; i < concatenated_cell_bytes.Count; i++)
-        //{
-        //    Debug.Log("L: "+concatenated_cell_bytes[i].Length);
-        //}
-        //Now we have a list of byte[]
-        //These byte[] are the map data concatenated and divided by arrays of length 200
-        byte[] final_cell_bytes = ArrayConcatenation.MergeArrays(concatenated_cell_bytes.ToArray());
-        Debug.Log("Concatenated the lists of concatenated cell bytes!");
-        //arrays[0] = final_cell_bytes;
-        //Concatenate the arrays
+    public static byte[] SerializeMapSeed(int[] seed) {
+        List<byte[]> bytes = new List<byte[]>();
+        for (int i = 0; i < seed.Length; i++)
+            bytes.Add(BitConverter.GetBytes(seed[i]));
+        byte[] final_cell_bytes = ArrayConcatenation.MergeArrays(bytes.ToArray());
         return(final_cell_bytes);
     }
-    public static MatchData DeserializeMatchData(byte[] map_bytes) {
-        Debug.Log("Deserializing Match Data!");
-        MatchData result_data = new MatchData();
-        //We got a map
-        //Maps are a group of byte[]
-        byte[][] concatenated_cell_bytes = ArrayConcatenation.UnmergeArrays(map_bytes);
-        //byte[][] size_bytes = ArrayConcatenation.UnmergeArrays(concatenated_cell_bytes[concatenated_cell_bytes.Length-1]);
-        //int map_x = BitConverter.ToInt32(size_bytes[0],0);
-        //int map_y = BitConverter.ToInt32(size_bytes[1],0);
-        //Debug.Log(map_x);
-        //Debug.Log(map_y);
-        
-
-        List<List<byte[]>> l = new List<List<byte[]>>();
-        for (int i = 0; i < concatenated_cell_bytes.Length; i++)
-        {
-            List<byte[]> gathered_cells = new List<byte[]>();
-            byte[][] bytes = ArrayConcatenation.UnmergeArrays(concatenated_cell_bytes[i]);
-            for (int o = 0; o < bytes.Length; o++)
-                gathered_cells.Add(bytes[o]);
-            l.Add(gathered_cells);
-        }
-        //These byte[] are a group of byte[]
-        List<byte[]> all_cells = new List<byte[]>();
-        foreach (List<byte[]> b in l)
-        {
-            foreach (byte[] c in b)
-            {
-                all_cells.Add(c);
-            }
-        }
-        //Get bytes from all the map cells
-        //MapCellData[,] result_map = new MapCellData[map_x,map_y];
-        //for (int y = 0; y < map_y; y++)
-            //for (int x = 0; x < map_x; x++)
-                //result_map[x,y] = DeserializeMapCell(all_cells[y*map_x + x]);
-        List<MapCellData> cells = new List<MapCellData>();
-        for (int i = 0; i < all_cells.Count; i++)
-        {
-            cells.Add(DeserializeMapCell(all_cells[i]));
-        }
-        
-        //Each byte[] is a map cell
-        //Lets get the cells data
+    public static int[] DeserializeMapSeed(byte[] map_seed_bytes) {
+        Debug.Log("Deserializing Map Data!");
+        byte[][] bytes = ArrayConcatenation.UnmergeArrays(map_seed_bytes);
+        List<int> seed = new List<int>();
+        for (int i = 0; i < bytes.Length; i++)
+            seed.Add(BitConverter.ToInt32(bytes[i],0));
         Debug.Log("Finished deserializing map!");
-        return(result_data);
+        return(seed.ToArray());
     }
     static MapCellData DeserializeMapCell(byte[] bytes) {
         //Create an array of the arrays you wanna serialize together

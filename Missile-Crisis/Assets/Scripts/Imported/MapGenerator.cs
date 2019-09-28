@@ -269,7 +269,7 @@ public static class MapGenerator
     }
     #endregion
 #region Static Map
-    public static StaticMap[,] GenerateValidStaticMap(int size, int smooth_iterations, float min_lan, int random_seed) {
+    public static StaticMap[,] GenerateValidStaticMap(int size, int smooth_iterations, int min_lan_percentage, int random_seed) {
         Random.InitState(random_seed);
         StaticMap[,] new_map = GenerateMap(size);
         //Return new map here to avoid validation
@@ -277,6 +277,7 @@ public static class MapGenerator
         
         //Check validity
         int max_check_iterations = 50;
+        float min_lan = 100/min_lan_percentage;
         while(!IsStaticMapValid(new_map,min_lan)) {
             new_map = GenerateMap(size);
             max_check_iterations--;

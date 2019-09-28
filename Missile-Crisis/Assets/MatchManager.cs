@@ -27,18 +27,25 @@ public class MatchManager : MonoBehaviour
         StartCoroutine(CreateAndDistributeMap(player_quantity));        
     }
     IEnumerator CreateAndDistributeMap (int player_quantity) {
-        static_map = MapGenerator.GenerateValidStaticMap(100*player_quantity,player_quantity, 0.75f,Random.Range(0,999999));
-        dynamic_map = MapGenerator.GenerateValidDynamicMap(static_map,player_quantity,Random.Range(0,999999));
+        int[] map_seed = new int[]{20*player_quantity, player_quantity, 75, Random.Range(0,999999),Random.Range(0,999999)};
+        static_map = MapGenerator.GenerateValidStaticMap(map_seed[0],map_seed[1], map_seed[2],map_seed[3]);
+        dynamic_map = MapGenerator.GenerateValidDynamicMap(static_map,map_seed[1],map_seed[4]);
         data.map = MapGenerator.GetMapData(static_map,dynamic_map);
         Debug.Log("Finished creating and dividing map.");
-        //photon_view.RPC("RPC_ReceiveMap",RpcTarget.All,Serialization.SerializeMatchData(data));
+        photon_view.RPC("RPC_ReceiveMap",RpcTarget.All,Serialization.SerializeMapSeed(map_seed));
         Debug.Log("Sent map through network.");
-        StartCoroutine(match_view.DrawMap(data.map));
+        //StartCoroutine(match_view.DrawMap(data.map));
         yield break;
     }
     [PunRPC] void RPC_ReceiveMap(byte[] bytes){
-        data = Serialization.DeserializeMatchData(bytes);
+        int[] map_seed = Serialization.DeserializeMapSeed(bytes);
+        static_map = MapGenerator.GenerateValidStaticMap(map_seed[0],map_seed[1], map_seed[2],map_seed[3]);
+        dynamic_map = MapGenerator.GenerateValidDynamicMap(static_map,map_seed[1],map_seed[4]);
+        data.map = MapGenerator.GetMapData(static_map,dynamic_map);
+        Debug.Log(static_map[0,0].type + " " + static_map.GetLength(0));
+        Debug.Log(dynamic_map[0,0].owner_id + " " + static_map.GetLength(0));
+        Debug.Log(data.map[0,0].owner_id + " " + data.map.GetLength(0));
         Debug.Log("Received a map!");
-        match_view.DrawMap(data.map);
+        StartCoroutine(match_view.DrawMap(data.map));
     }
 }

@@ -29,62 +29,21 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   RpcList:
-  - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
-  - RPC_AddPlayer
-  - RPC_ChangeHP
-  - RPC_ConsumeFood
-  - RPC_CreatePlayer
-  - RPC_PlayerSetup
-  - UpdateData
-  - RPC_Die
-  - RPC_DestroySomething
-  - RPC_PushSomething
-  - RPC_ActivateSomething
-  - RPC_PostEmote
-  - RPC_OnActivatedObject
-  - RPC_OnCollisionObject
-  - RPC_OnTriggeredObject
-  - RPC_OnPickedUpObject
-  - RPC_OnDroppedObject
-  - RPC_ShootWeapon
-  - RPC_SynchronizeMonobehaviour
-  - RPC_SynchronizeBehaviour
-  - RPC_SynchronizePlayers
-  - RPC_SynchronizePlayer
-  - RPC_Jump
-  - RPC_Move
-  - RPC_Revive
-  - RPC_Clear_States
-  - RPC_Receive_State
-  - RPC_Send_State
-  - RPC_ChooseCharacter
-  - RPC_StartGame
-  - RPC_DisableStartInput
-  - RPC_SetMasterClient
-  - RPC_PostNotification
-  - RPC_EndEnemyEncounter
-  - RPC_NewEnemyEncounter
-  - RPC_AdventureNext
-  - RPC_AdventureStart
-  - RPC_ToggleNextInput
-  - RPC_TogglePlayersCombat
-  - RPC_GetHit
   - RPC_AddEntry
-  - RPC_EndEncounter
-  - RPC_NewEvent
-  - RPC_HitEnemy
+  - RPC_AddPlayer
+  - RPC_CastStartVote
   - RPC_GenerateStaticMap
   - RPC_PlaceMissileSilo
+  - RPC_PlayerSetup
+  - RPC_ReceiveMap
   - RPC_ReceiveProjectiles
   - RPC_ReceiveSilos
   - RPC_ResetTimer
+  - RPC_SetMasterClient
   - RPC_ShowNotification
+  - RPC_SynchronizePlayer
   - RPC_ToggleMissilePlacement
   - RPC_UpdateDynamicMap
   - RPC_UpdateNextBombGUI
-  - RPC_CastStartVote
-  - RPC_ReceiveMap
   DisableAutoOpenWizard: 1
   ShowSettings: 1
