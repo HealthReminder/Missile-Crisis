@@ -29,6 +29,7 @@ using UnityEngine.UI;
     public int photon_viewID;
     public PhotonView photon_view;  
     public Camera player_camera;
+    public CameraBehaviour cam_behaviour;
     private void Start() {
         if(!photonView.IsMine) 
             return;
@@ -41,6 +42,21 @@ using UnityEngine.UI;
         
         if(!photon_view.IsMine)
             return;
+
+        //Move camera
+        if(Input.GetMouseButtonDown(1)){
+            RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if(hit.collider != null)
+            {
+                Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
+                cam_behaviour.MoveFocus(hit.transform.position);
+            }
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") != 0f ) {
+            cam_behaviour.Zoom(Input.GetAxis("Mouse ScrollWheel"));
+            
+        }
+            
     }
     
 
