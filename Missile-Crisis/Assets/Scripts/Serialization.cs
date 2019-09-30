@@ -106,11 +106,20 @@ public static class Serialization
     #region PlayerData
     public static byte[] SerializePlayerData(PlayerData p_data) {
         //Create an array of the arrays you wanna serialize together
-        byte[][] arrays = new byte[4][];
+        byte[][] arrays = new byte[7][];
         arrays[0] = System.Text.Encoding.UTF8.GetBytes(p_data.player_name);
         arrays[1] = BitConverter.GetBytes(p_data.photon_view_id);
         arrays[2] = BitConverter.GetBytes(p_data.player_id);
         arrays[3] = BitConverter.GetBytes(p_data.is_playing);
+        arrays[4] = BitConverter.GetBytes(p_data.is_placing);
+        arrays[5] = BitConverter.GetBytes(p_data.left_silos);
+
+        byte[][] color_bytes = new byte[4][];
+        color_bytes[0] = BitConverter.GetBytes(p_data.player_color.r);
+        color_bytes[1] = BitConverter.GetBytes(p_data.player_color.g);
+        color_bytes[2] = BitConverter.GetBytes(p_data.player_color.b);
+        color_bytes[3] = BitConverter.GetBytes(p_data.player_color.a);
+        arrays[6] = ArrayConcatenation.MergeArrays(color_bytes);
         //Debug.Log("Serialized "+arrays.GetLength(0) + " arrays.");
         //Concatenate the arrays
         return(ArrayConcatenation.MergeArrays(arrays));
@@ -123,6 +132,15 @@ public static class Serialization
         result_data.photon_view_id = BitConverter.ToInt32(data_array[1],0);
         result_data.player_id = BitConverter.ToInt32(data_array[2],0);
         result_data.is_playing = BitConverter.ToBoolean(data_array[3],0);
+        result_data.is_placing = BitConverter.ToBoolean(data_array[4],0);
+        result_data.left_silos = BitConverter.ToInt32(data_array[5],0);
+
+        float[] color_data = new float[4];
+        byte[][] color_bytes = ArrayConcatenation.UnmergeArrays(data_array[6]);
+        for (int i = 0; i < color_bytes.Length; i++)
+            color_data[i] = BitConverter.ToSingle(color_bytes[i],0);
+        result_data.player_color = new Color(color_data[0],color_data[1],color_data[2],color_data[3]);
+        
         return(result_data);
     }
     #endregion 

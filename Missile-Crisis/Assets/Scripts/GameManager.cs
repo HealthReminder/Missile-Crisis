@@ -163,9 +163,27 @@ using UnityEngine;
 
         PhotonView playerView = PhotonNetwork.GetPhotonView (receivedPhotonViewID);
         Debug.Log ("Adding new player with index of " + newPlayerIndex + " to the list of size " + listOfPlayersPlaying.Length);
-        listOfPlayersPlaying[newPlayerIndex] = playerView.GetComponent<PlayerManager>();
-        listOfPlayersPlaying[newPlayerIndex].data = new PlayerData();
-        listOfPlayersPlaying[newPlayerIndex].data.Reset(received_name,receivedPhotonViewID,newPlayerIndex);
+        PlayerManager received_manager = playerView.GetComponent<PlayerManager>();
+        Debug.Log(received_manager.photon_viewID);
+        received_manager.data = new PlayerData();
+        received_manager.data.Reset(received_name,receivedPhotonViewID,newPlayerIndex);
+
+        float color_distribution = 2f;
+        float[] color_values = new float[3];
+        for (int i = 0; i < color_values.Length; i++){
+            float new_value;
+            if(color_distribution >=1){
+                new_value = UnityEngine.Random.Range(0f,1f);
+                
+            } else 
+                new_value = UnityEngine.Random.Range(0f,color_distribution);
+            color_distribution-= new_value;
+            color_values[i] = new_value;
+        }
+        
+        received_manager.data.player_color = new Color(color_values[0],color_values[1],color_values[2],1);
+
+        listOfPlayersPlaying[newPlayerIndex] = received_manager;        
         data.players_in_room = listOfPlayersPlaying.Length;
         UpdateWaitingClock();
         if (!PhotonNetwork.IsMasterClient)

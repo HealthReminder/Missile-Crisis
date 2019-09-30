@@ -7,14 +7,20 @@ using System;
 using UnityEngine.UI;
 [System.Serializable] public class PlayerData {
     public string player_name;
+    public Color player_color;
     public int photon_view_id;
     public int player_id;    
     public bool is_playing = false;
+    public bool is_placing = false;
+    public int left_silos;
     public void Reset(string name,int photon_id,int player_room_id){
         player_name = name;
         photon_view_id = photon_id;
         player_id = player_room_id;
         is_playing = false;
+        is_placing = false;
+        left_silos = 0;
+        player_color = Color.black;
     }
 
 }
@@ -30,6 +36,7 @@ using UnityEngine.UI;
     public PhotonView photon_view;  
     public Camera player_camera;
     public CameraBehaviour cam_behaviour;
+    public MapView map_view;
     private void Start() {
         if(!photonView.IsMine) 
             return;
@@ -42,6 +49,21 @@ using UnityEngine.UI;
         
         if(!photon_view.IsMine)
             return;
+
+        if(Input.GetMouseButtonDown(0)){
+            if(data.is_placing && data.left_silos > 0) { 
+                RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                if(hit)
+                if(hit.transform.GetComponent<BoardCell>()){
+                    BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
+                    if(selected_cell.owner_id == data.player_id && !selected_cell.has_silo) {
+                        data.left_silos--;
+                        selected_cell.has_silo = true;
+                        MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
+                    }
+                }
+            }
+        }
 
         //Move camera
         if(Input.GetMouseButtonDown(1)){
@@ -57,6 +79,13 @@ using UnityEngine.UI;
             
         }
             
+    }
+    public void TogglePlacement(bool is_on, int target_silos) {
+        if(!photon_view.IsMine)
+            return;
+        
+        data.is_placing = is_on;
+        data.left_silos = target_silos;
     }
     
 

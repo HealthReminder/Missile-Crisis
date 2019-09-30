@@ -32,8 +32,10 @@ MonoBehaviour:
   - RPC_AddEntry
   - RPC_AddPlayer
   - RPC_CastStartVote
+  - RPC_EnableSiloPlacement
   - RPC_GenerateStaticMap
   - RPC_PlaceMissileSilo
+  - RPC_PlaceSilo
   - RPC_PlayerSetup
   - RPC_ReceiveMap
   - RPC_ReceiveProjectiles
