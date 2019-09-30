@@ -14,8 +14,6 @@ public class MapView : MonoBehaviour
         int size_x = map.GetLength(0);
         int size_y = map.GetLength(1);
         SetupMap(size_x,size_y);
-        //List<Color> colors = new List<Color>();
-        Debug.Log("Updating map");
         for (int i = 0; i < size_y; i++){
             for (int o = 0; o < size_x; o++){
                 BoardCell cell = cell_map[o,i];

@@ -9,14 +9,18 @@ public static class Serialization
     //[SerializeField] public EnemyData deserialized_event
     #region MatchManager
     public static byte[] SerializeMatchData(MatchData m_data) {
-        byte[][] arrays = new byte[1][];
-        arrays[0] = BitConverter.GetBytes(m_data.has_placed_silos);
+        byte[][] arrays = new byte[3][];
+        arrays[0] = BitConverter.GetBytes(m_data.is_war_on);
+        arrays[1] = BitConverter.GetBytes(m_data.can_match_end);
+        arrays[2] = BitConverter.GetBytes(m_data.is_match_over);
         return(ArrayConcatenation.MergeArrays(arrays));
     }
     public static MatchData DeserializeMatchData(byte[] bytes) {
         MatchData result_data = new MatchData();
         byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
-        result_data.has_placed_silos = BitConverter.ToBoolean(data_array[0],0);
+        result_data.is_war_on = BitConverter.ToBoolean(data_array[0],0);
+        result_data.can_match_end = BitConverter.ToBoolean(data_array[1],0);
+        result_data.is_match_over = BitConverter.ToBoolean(data_array[2],0);
         return(result_data);
     }
     #endregion
@@ -56,30 +60,16 @@ public static class Serialization
         return(seed.ToArray());
     }
     static MapCellData DeserializeMapCell(byte[] bytes) {
-        //Create an array of the arrays you wanna serialize together
         byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
-        //Debug.Log("Deserialized "+data_array.GetLength(0) + " arrays.");
         MapCellData cell = new MapCellData();
         cell.has_silo = BitConverter.ToBoolean(data_array[0],0);
         cell.is_nuked = BitConverter.ToBoolean(data_array[1],0);
         cell.owner_id = BitConverter.ToInt32(data_array[2],0);
-        //cell.type = BitConverter.ToInt32(data_array[3],0);
 
         Debug.Log(data_array.Length);
         Debug.Log(data_array[4].Length);
         byte[][] land_bytes = ArrayConcatenation.UnmergeArrays(data_array[4]);
         List<Vector2> deserialized_coords = new List<Vector2>();
-       // for (int i = 0; i < land_bytes.Length; i++)
-       // {
-         //   byte[][] coord_bytes = ArrayConcatenation.UnmergeArrays(land_bytes[i]);
-          //  if(coord_bytes[0][0] == 0){
-//
-           // } else {
-          //      Vector2 new_coords = new Vector2(BitConverter.ToSingle(coord_bytes[0],0),BitConverter.ToSingle(coord_bytes[1],0));
-          //      deserialized_coords.Add(new_coords);
-          //  }
-        //}
-        //cell.adjacent_land = deserialized_coords.ToArray();
         return(cell);
     }
     static byte[] SerializeMapCell(MapCellData d) {

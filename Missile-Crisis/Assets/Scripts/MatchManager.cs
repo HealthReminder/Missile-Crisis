@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
-public class MatchData {
-    public bool has_placed_silos;
+[System.Serializable]public class MatchData {
+    public bool can_match_end;
+    public bool is_war_on;
+    public bool is_match_over;
     public MapCellData[,] map; //Should be synchronized before match
 }
 
+[System.Serializable] public struct PlayerInMatch {
+    public int player_id;
+    public bool is_dead;
+    public List<MapCellData> silos;
+
+}
 public class MatchManager : MonoBehaviour
 {
     public static MatchManager instance;
@@ -15,26 +23,94 @@ public class MatchManager : MonoBehaviour
         instance = this;
         data = new MatchData();
         data.map = null;
-        data.has_placed_silos = false;
+        data.can_match_end = false;
+        data.is_war_on = false;
+        players_in_match = new List<PlayerInMatch>();
     }
     public PhotonView photon_view;
-    public MatchData data;
+    [SerializeField] public MatchData data;
+    [SerializeField] public List<PlayerInMatch> players_in_match;
     StaticMap[,] static_map;
     DynamicMap[,] dynamic_map;
     public IEnumerator SharedLoop(int player_quantity) {
-        RPC_ToggleSiloPlacement(BitConverter.GetBytes(true), BitConverter.GetBytes(5));
-        yield return new WaitForSeconds(10);
-        RPC_ToggleSiloPlacement(BitConverter.GetBytes(false), BitConverter.GetBytes(0));
-        data.has_placed_silos = true;
-        while(data.has_placed_silos) {
-            yield return new WaitForSeconds(5);
-            AddMissileAll(5);
+        //SET PLAYERS PLAYING
+        data.is_match_over = false;
+        for (int i = 0; i < player_quantity; i++)
+            if(GameManager.instance.listOfPlayersPlaying[i] != null){
+                PlayerManager p = GameManager.instance.listOfPlayersPlaying[i];
+                p.data.is_playing = true;
+                PlayerInMatch pm = new PlayerInMatch();
+                pm.player_id = i;
+                pm.is_dead = false;
+                pm.silos = new List<MapCellData>();
+                players_in_match.Add(pm);
+            }
+
+        while(!data.is_match_over) {
+            if(!data.is_war_on) {
+                //SILO PLACEMENT
+                RPC_ToggleSiloPlacement(BitConverter.GetBytes(true), BitConverter.GetBytes(5));
+                yield return new WaitForSeconds(10);
+                RPC_ToggleSiloPlacement(BitConverter.GetBytes(false), BitConverter.GetBytes(0));
+                data.is_war_on = true;
+                data.can_match_end = true;
+            }
+            //MISSILE GAIN
+            if(data.is_war_on) {
+                yield return new WaitForSeconds(5);
+                AddMissileAll(5);
+                yield return null;
+            }
             yield return null;
         }
-
-        Debug.Log("Enable war!!");
+        Debug.Log("Match loop ended.");
         yield break;
     }
+    private void Update() {
+        if(data.can_match_end)
+            if(CheckEndGame()){
+                data.can_match_end = false;
+                EndGame();
+            }
+    }
+#region End Game
+    bool CheckEndGame (){
+        bool may_end = false;
+        for (int i = 0; i < players_in_match.Count; i++)  {
+            PlayerInMatch p = players_in_match[i];
+            //If the player is not out yet
+            //Count its silos and compare to which are not destroyed
+            //If all is destroyed kill it.
+            //Check if all the players but one is dead
+            int players_playing = players_in_match.Count;
+            int players_dead = 0;
+            if(!p.is_dead)  {
+                int total_silos = p.silos.Count;
+                int destroyed_silos = 0;
+                for (int o = 0; o < p.silos.Count; o++)
+                    if(p.silos[o].is_nuked)
+                        destroyed_silos++;
+                
+                    
+                if(destroyed_silos >= total_silos)
+                    p.is_dead = true;
+            } else
+                players_dead++;
+                
+            if(players_dead >= players_playing-1)
+                may_end = true;
+            players_in_match[i] = p;
+        }
+        return may_end;
+    }
+    void EndGame() {
+        PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
+        for (int i = 0; i < players.Length; i++)
+            if(players[i] != null)
+                players[i].data.is_playing = false;
+        Debug.Log("End game function");
+    }
+#endregion
 #region Missile Gain
     public void AddMissileAll(int quantity) {
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
@@ -58,6 +134,7 @@ public class MatchManager : MonoBehaviour
         if(cell.has_silo)
             return;
         cell.has_silo = true;
+        players_in_match[received_id].silos.Add(cell);
         UpdatePlayerMap();
     }
     void ToggleSiloPlacement(bool is_on, int qtd) {

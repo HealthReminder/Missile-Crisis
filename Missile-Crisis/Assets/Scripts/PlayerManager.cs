@@ -52,6 +52,23 @@ using UnityEngine.UI;
         if(!photon_view.IsMine)
             return;
 
+        //Move camera
+        if(Input.GetMouseButtonDown(1)){
+            RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if(hit.collider != null)
+            {
+                //Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
+                cam_behaviour.MoveFocus(hit.transform.position);
+            }
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") != 0f ) {
+            cam_behaviour.Zoom(Input.GetAxis("Mouse ScrollWheel"));
+            
+        }
+            
+        if(!data.is_playing)
+            return;
+
         if(Input.GetMouseButtonDown(0)){
             if(data.is_placing && data.left_silos > 0) { 
                 RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -64,13 +81,13 @@ using UnityEngine.UI;
                         MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
                     }
                 }
-            } else if(MatchManager.instance.data.has_placed_silos && data.left_missiles > 0) {
+            } else if(MatchManager.instance.data.is_war_on && data.left_missiles > 0) {
                 RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
                 if(hit)
                 if(hit.transform.GetComponent<BoardCell>()){
                     BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
                     if(selected_cell.owner_id != data.player_id) {
-                        Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
+                        //Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
                         data.left_missiles--;
                         ShootMissile(data.left_missiles,selected_cell.coordinates);
                     }
@@ -78,21 +95,6 @@ using UnityEngine.UI;
                 
             }
         }
-
-        //Move camera
-        if(Input.GetMouseButtonDown(1)){
-            RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            if(hit.collider != null)
-            {
-                Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
-                cam_behaviour.MoveFocus(hit.transform.position);
-            }
-        }
-        if (Input.GetAxis("Mouse ScrollWheel") != 0f ) {
-            cam_behaviour.Zoom(Input.GetAxis("Mouse ScrollWheel"));
-            
-        }
-            
     }
     
     #region Loop
@@ -115,7 +117,7 @@ using UnityEngine.UI;
             return;
 
         map_view.UpdateMap(MatchManager.instance.data.map,data.player_id);
-        Debug.Log(player_id + " shot a missile on "+x+"/"+y+"and has "+left_missiles+" on stock.");
+        //Debug.Log(player_id + " shot a missile on "+x+"/"+y+"and has "+left_missiles+" on stock.");
     }
     public void InsertMissile(int qtd) {
         data.left_missiles += qtd;
