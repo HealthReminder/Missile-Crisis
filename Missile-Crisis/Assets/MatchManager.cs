@@ -22,14 +22,13 @@ public class MatchManager : MonoBehaviour
     StaticMap[,] static_map;
     DynamicMap[,] dynamic_map;
     public IEnumerator SharedLoop(int player_quantity) {
-        StartCoroutine(CreateAndDistributeMap(player_quantity));
         RPC_ToggleSiloPlacement(BitConverter.GetBytes(true), BitConverter.GetBytes(5));
         yield return new WaitForSeconds(10);
         RPC_ToggleSiloPlacement(BitConverter.GetBytes(false), BitConverter.GetBytes(0));
         data.has_placed_silos = true;
         while(data.has_placed_silos) {
             yield return new WaitForSeconds(5);
-            AddMissileAll(1);
+            AddMissileAll(5);
             yield return null;
         }
 
@@ -86,7 +85,7 @@ public class MatchManager : MonoBehaviour
                 p[i].map_view.Clear();
         }
     }
-    IEnumerator CreateAndDistributeMap (int player_quantity) {
+    public IEnumerator CreateAndDistributeMap (int player_quantity) {
         int[] map_seed = new int[]{20*player_quantity, player_quantity, 75, UnityEngine.Random.Range(0,999999),UnityEngine.Random.Range(0,999999)};
         static_map = MapGenerator.GenerateValidStaticMap(map_seed[0],map_seed[1], map_seed[2],map_seed[3]);
         dynamic_map = MapGenerator.GenerateValidDynamicMap(static_map,map_seed[1],map_seed[4]);

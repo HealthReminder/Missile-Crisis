@@ -116,7 +116,7 @@ public static class Serialization
     #region PlayerData
     public static byte[] SerializePlayerData(PlayerData p_data) {
         //Create an array of the arrays you wanna serialize together
-        byte[][] arrays = new byte[7][];
+        byte[][] arrays = new byte[8][];
         arrays[0] = System.Text.Encoding.UTF8.GetBytes(p_data.player_name);
         arrays[1] = BitConverter.GetBytes(p_data.photon_view_id);
         arrays[2] = BitConverter.GetBytes(p_data.player_id);
@@ -130,8 +130,9 @@ public static class Serialization
         color_bytes[2] = BitConverter.GetBytes(p_data.player_color.b);
         color_bytes[3] = BitConverter.GetBytes(p_data.player_color.a);
         arrays[6] = ArrayConcatenation.MergeArrays(color_bytes);
-        //Debug.Log("Serialized "+arrays.GetLength(0) + " arrays.");
-        //Concatenate the arrays
+
+        arrays[7] = BitConverter.GetBytes(p_data.left_missiles);
+
         return(ArrayConcatenation.MergeArrays(arrays));
     }
     public static PlayerData DeserializePlayerData(byte[] bytes) {
@@ -150,6 +151,8 @@ public static class Serialization
         for (int i = 0; i < color_bytes.Length; i++)
             color_data[i] = BitConverter.ToSingle(color_bytes[i],0);
         result_data.player_color = new Color(color_data[0],color_data[1],color_data[2],color_data[3]);
+
+        result_data.left_missiles = BitConverter.ToInt32(data_array[7],0);
         
         return(result_data);
     }

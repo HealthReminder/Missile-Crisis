@@ -21,18 +21,34 @@ public class MapView : MonoBehaviour
                 BoardCell cell = cell_map[o,i];
                 cell.owner_id = map[o,i].owner_id;
                 cell.has_silo = map[o,i].has_silo;
+                cell.is_nuked = map[o,i].is_nuked;
                 
-                if(cell.owner_id == -1)
-                    cell.static_appearance.color = Color.blue;
-                else {
+                if(cell.owner_id == -1){
+                    if(!cell.is_nuked)
+                        cell.static_appearance.color = new Color(0,0,0.6f,1);
+                    else
+                        cell.static_appearance.color = new Color(0,0,0.2f,1);
+                } else {
                     Color player_color = GameManager.instance.listOfPlayersPlaying[cell.owner_id].data.player_color;
-                    if(cell.owner_id != player_id)
-                        cell.static_appearance.color = new Color(player_color.r,player_color.g,player_color.b,1);
-                    else if(cell.owner_id == player_id)
-                        if(cell.has_silo)
+                    if(cell.owner_id != player_id){
+                        if(!cell.is_nuked)
                             cell.static_appearance.color = new Color(player_color.r,player_color.g,player_color.b,1);
-                        else 
+                        else if(!cell.has_silo && cell.is_nuked)
                             cell.static_appearance.color = new Color(player_color.r/2,player_color.g/2,player_color.b/2,1);
+                        else if(cell.has_silo && cell.is_nuked)
+                            cell.static_appearance.color = new Color(player_color.r/3,player_color.g/3,player_color.b/3,1);
+                        
+                    }
+                    else if(cell.owner_id == player_id){
+                        if(cell.has_silo && !cell.is_nuked)
+                            cell.static_appearance.color = new Color(player_color.r,player_color.g,player_color.b,1);
+                        else if(!cell.has_silo && !cell.is_nuked)
+                            cell.static_appearance.color = new Color(player_color.r/2,player_color.g/2,player_color.b/2,1);
+                        else if(!cell.has_silo && cell.is_nuked)
+                            cell.static_appearance.color = new Color(player_color.r/3,player_color.g/3,player_color.b/3,1);
+                        else if(cell.has_silo && cell.is_nuked)
+                            cell.static_appearance.color = new Color(player_color.r/4,player_color.g/4,player_color.b/4,1);
+                    }
                 }
                 //else if(cell.owner_id == player_id) {
                 //    if(cell.has_silo)

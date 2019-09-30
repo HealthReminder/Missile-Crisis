@@ -53,7 +53,7 @@ using UnityEngine;
                             return;
                         if(match_start_view.is_working_gui)
                             return;
-                        StartCoroutine(MatchManager.instance.SharedLoop(listOfPlayersPlaying.Length));       
+                        StartCoroutine(CreateMapAndEnableSharedLoop(listOfPlayersPlaying.Length));  
                     } else {
                         //Wait
                     }
@@ -69,6 +69,13 @@ using UnityEngine;
     }
     
 #region Loop
+    IEnumerator CreateMapAndEnableSharedLoop(int player_quantity) {
+        yield return MatchManager.instance.CreateAndDistributeMap(player_quantity);  
+        photon_view.RPC("RPC_EnableSharedLoop",RpcTarget.All);
+    }
+    [PunRPC] void RPC_EnableSharedLoop() {
+        StartCoroutine(MatchManager.instance.SharedLoop(listOfPlayersPlaying.Length));
+    }
 
 #endregion
 #region Start

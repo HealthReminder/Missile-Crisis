@@ -13,6 +13,7 @@ using UnityEngine.UI;
     public bool is_playing = false;
     public bool is_placing = false;
     public int left_silos;
+    public int left_missiles;
     public void Reset(string name,int photon_id,int player_room_id){
         player_name = name;
         photon_view_id = photon_id;
@@ -20,6 +21,7 @@ using UnityEngine.UI;
         is_playing = false;
         is_placing = false;
         left_silos = 0;
+        left_missiles = 0;
         player_color = Color.black;
     }
 
@@ -62,6 +64,18 @@ using UnityEngine.UI;
                         MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
                     }
                 }
+            } else if(MatchManager.instance.data.has_placed_silos && data.left_missiles > 0) {
+                RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                if(hit)
+                if(hit.transform.GetComponent<BoardCell>()){
+                    BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
+                    if(selected_cell.owner_id != data.player_id) {
+                        Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
+                        data.left_missiles--;
+                        ShootMissile(data.left_missiles,selected_cell.coordinates);
+                    }
+                }
+                
             }
         }
 
@@ -80,6 +94,34 @@ using UnityEngine.UI;
         }
             
     }
+    
+    #region Loop
+    void ShootMissile(int left_missiles, Vector2 coords) {
+        byte[] qtd_bytes = BitConverter.GetBytes(left_missiles);
+        byte[] id_bytes = BitConverter.GetBytes(data.player_id);
+        byte[] x_bytes = BitConverter.GetBytes((int)coords.x);
+        byte[] y_bytes = BitConverter.GetBytes((int)coords.y);
+        photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,x_bytes,y_bytes);
+
+    }
+    [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] x_bytes, byte[] y_bytes) {
+        int left_missiles = BitConverter.ToInt32(qtd_bytes,0);
+        int player_id = BitConverter.ToInt32(id_bytes,0);
+        int x = BitConverter.ToInt32(x_bytes,0);
+        int y = BitConverter.ToInt32(y_bytes,0);
+        MatchManager.instance.data.map[x,y].is_nuked = true;
+        data.left_missiles = left_missiles;
+        if(!photon_view.IsMine)
+            return;
+
+        map_view.UpdateMap(MatchManager.instance.data.map,data.player_id);
+        Debug.Log(player_id + " shot a missile on "+x+"/"+y+"and has "+left_missiles+" on stock.");
+    }
+    public void InsertMissile(int qtd) {
+        data.left_missiles += qtd;
+    }
+    #endregion
+    #region Start
     public void TogglePlacement(bool is_on, int target_silos) {
         if(!photon_view.IsMine)
             return;
@@ -87,13 +129,8 @@ using UnityEngine.UI;
         data.is_placing = is_on;
         data.left_silos = target_silos;
     }
-
-    //GAINING MISSILES
-    public void InsertMissile(int qtd) {
-        data.left_silos += qtd;
-    }
-    
-
+    #endregion
+    #region Setup
     //SETUP - BEFORE THE ADVENTURE GET STARTED
     IEnumerator WaitSetup(float seconds){
         //OVERLAY
@@ -141,5 +178,6 @@ using UnityEngine.UI;
         is_setup = true;
         return;
     } 
+    #endregion
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info){}   
 }

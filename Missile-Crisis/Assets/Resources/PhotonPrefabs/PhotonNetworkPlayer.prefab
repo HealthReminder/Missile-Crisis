@@ -235,6 +235,7 @@ MonoBehaviour:
     is_playing: 0
     is_placing: 0
     left_silos: 0
+    left_missiles: 0
   is_setup: 0
   photon_viewID: 0
   photon_view: {fileID: 1989414464114271604}
@@ -343,6 +344,7 @@ MonoBehaviour:
   static_appearance: {fileID: 8101383173597687136}
   owner_id: 0
   has_silo: 0
+  is_nuked: 0
   coordinates: {x: 0, y: 0}
 --- !u!61 &4024789845569748059
 BoxCollider2D:
