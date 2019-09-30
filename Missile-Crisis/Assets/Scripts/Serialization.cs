@@ -7,15 +7,25 @@ public static class Serialization
 {    
     //[SerializeField] public EnemyData serialize_event;
     //[SerializeField] public EnemyData deserialized_event
+    #region MatchManager
+    public static byte[] SerializeMatchData(MatchData m_data) {
+        byte[][] arrays = new byte[1][];
+        arrays[0] = BitConverter.GetBytes(m_data.has_placed_silos);
+        return(ArrayConcatenation.MergeArrays(arrays));
+    }
+    public static MatchData DeserializeMatchData(byte[] bytes) {
+        MatchData result_data = new MatchData();
+        byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
+        result_data.has_placed_silos = BitConverter.ToBoolean(data_array[0],0);
+        return(result_data);
+    }
+    #endregion
     #region GameManager
     public static byte[] SerializeGameData(GameData g_data) {
-        //Create an array of the arrays you wanna serialize together
         byte[][] arrays = new byte[3][];
         arrays[0] = BitConverter.GetBytes(g_data.is_match_started);
         arrays[1] = BitConverter.GetBytes(g_data.players_in_room);
         arrays[2] = BitConverter.GetBytes(g_data.votes_to_start);
-        //Debug.Log("Serialized "+arrays.GetLength(0) + " arrays.");
-        //Concatenate the arrays
         return(ArrayConcatenation.MergeArrays(arrays));
     }
     public static GameData DeserializeGameData(byte[] bytes) {
@@ -28,7 +38,7 @@ public static class Serialization
         return(result_data);
     }
     #endregion
-    #region MatchManager
+    #region MapManager
     public static byte[] SerializeMapSeed(int[] seed) {
         List<byte[]> bytes = new List<byte[]>();
         for (int i = 0; i < seed.Length; i++)

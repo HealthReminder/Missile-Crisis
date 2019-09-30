@@ -87,6 +87,11 @@ using UnityEngine.UI;
         data.is_placing = is_on;
         data.left_silos = target_silos;
     }
+
+    //GAINING MISSILES
+    public void InsertMissile(int qtd) {
+        data.left_silos += qtd;
+    }
     
 
     //SETUP - BEFORE THE ADVENTURE GET STARTED

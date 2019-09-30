@@ -47,5 +47,6 @@ MonoBehaviour:
   - RPC_ToggleMissilePlacement
   - RPC_UpdateDynamicMap
   - RPC_UpdateNextBombGUI
+  - RPC_ToggleSiloPlacement
   DisableAutoOpenWizard: 1
   ShowSettings: 1

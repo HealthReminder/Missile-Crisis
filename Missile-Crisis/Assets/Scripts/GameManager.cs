@@ -53,7 +53,7 @@ using UnityEngine;
                             return;
                         if(match_start_view.is_working_gui)
                             return;
-                        MatchManager.instance.MatchStart(listOfPlayersPlaying.Length);                 
+                        StartCoroutine(MatchManager.instance.SharedLoop(listOfPlayersPlaying.Length));       
                     } else {
                         //Wait
                     }
@@ -197,12 +197,13 @@ using UnityEngine;
                 //EnemyData
                 //Serialization.instance.SerializeEnemyData(enemy_manager.data, enemy_manager.available_enemies),
                 //PlayerData
-                Serialization.SerializePlayerData(listOfPlayersPlaying[i].data)
+                Serialization.SerializePlayerData(listOfPlayersPlaying[i].data),
+                Serialization.SerializeMatchData(MatchManager.instance.data)
             ); 
         }
     }
 
-    [PunRPC] public void RPC_SynchronizePlayer (byte[] game_data_bytes, byte[] player_data_bytes) {
+    [PunRPC] public void RPC_SynchronizePlayer (byte[] game_data_bytes, byte[] player_data_bytes, byte[] match_data_bytes) {
         Debug.Log ("RPC_SynchronizePlayer");
         is_synchronizing_players = true;
         
@@ -215,6 +216,14 @@ using UnityEngine;
         PhotonView received_photon_view = PhotonNetwork.GetPhotonView (received_player_data.photon_view_id);
         PlayerManager received_player_manager = received_photon_view.GetComponent<PlayerManager> ();
         received_player_manager.data = received_player_data;    
+
+        //MatchData
+        MapCellData[,] map = null;
+        if(MatchManager.instance.data.map != null)
+            map = MatchManager.instance.data.map;
+        MatchManager.instance.data = Serialization.DeserializeMatchData(match_data_bytes);
+        if(map != null)
+            MatchManager.instance.data.map = map;
 
         //If there is no list create it
         if (listOfPlayersPlaying == null || listOfPlayersPlaying.Length != data.players_in_room)

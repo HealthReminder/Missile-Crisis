@@ -9,7 +9,6 @@ public class CameraBehaviour : MonoBehaviour
     public Transform focusing_transform;
     public Camera camera;
     public AnimationCurve smooth_curve;
-    float zoom_prog = 0.1f;
     bool is_positive = true;
     public void Zoom(float rate) {
         if(!can_zoom)
@@ -19,25 +18,20 @@ public class CameraBehaviour : MonoBehaviour
         float min_size = 10;
         float movement_velocity = 250;
         float current_distance = camera.orthographicSize;
+        float progress = Mathf.InverseLerp(min_size,max_size,current_distance);
         if(rate > 0) {
             if(!is_positive) {
                 is_positive = true;
-                zoom_prog = 0.1f;
             }
             if(current_distance > min_size) {
-                camera.orthographicSize += zoom_prog*-movement_velocity*Time.deltaTime;
-                if(zoom_prog < 1)
-                    zoom_prog += Time.deltaTime;
+                camera.orthographicSize += smooth_curve.Evaluate(progress)*-movement_velocity*Time.deltaTime*10;
             }
         } else {
             if(is_positive) {
                 is_positive = false;
-                zoom_prog = 0.1f;
             }
             if(current_distance < max_size) {
-                camera.orthographicSize += zoom_prog*movement_velocity*Time.deltaTime;
-                if(zoom_prog < 1)
-                    zoom_prog += Time.deltaTime;
+                camera.orthographicSize += smooth_curve.Evaluate(1-progress)*movement_velocity*Time.deltaTime*5;
             }
         }
     }

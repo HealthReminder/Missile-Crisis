@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System;
 public class MatchData {
+    public bool has_placed_silos;
     public MapCellData[,] map; //Should be synchronized before match
 }
 
@@ -12,14 +13,37 @@ public class MatchManager : MonoBehaviour
     public static MatchManager instance;
     private void Awake() {
         instance = this;
+        data = new MatchData();
+        data.map = null;
+        data.has_placed_silos = false;
     }
     public PhotonView photon_view;
     public MatchData data;
     StaticMap[,] static_map;
     DynamicMap[,] dynamic_map;
-    private void Start() {
-        data = new MatchData();
+    public IEnumerator SharedLoop(int player_quantity) {
+        StartCoroutine(CreateAndDistributeMap(player_quantity));
+        RPC_ToggleSiloPlacement(BitConverter.GetBytes(true), BitConverter.GetBytes(5));
+        yield return new WaitForSeconds(10);
+        RPC_ToggleSiloPlacement(BitConverter.GetBytes(false), BitConverter.GetBytes(0));
+        data.has_placed_silos = true;
+        while(data.has_placed_silos) {
+            yield return new WaitForSeconds(5);
+            AddMissileAll(1);
+            yield return null;
+        }
+
+        Debug.Log("Enable war!!");
+        yield break;
     }
+#region Missile Gain
+    public void AddMissileAll(int quantity) {
+        PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
+        for (int i = 0; i < players.Length; i++)
+            if(players[i] != null)
+                players[i].InsertMissile(quantity);
+    }
+#endregion
 #region Silo Placement
     public void PlaceSilo(Vector2 coords, int owner_id) {
         photon_view.RPC("RPC_PlaceSilo",RpcTarget.All,BitConverter.GetBytes(owner_id),BitConverter.GetBytes(coords.x),BitConverter.GetBytes(coords.y));
@@ -38,10 +62,10 @@ public class MatchManager : MonoBehaviour
         UpdatePlayerMap();
     }
     void ToggleSiloPlacement(bool is_on, int qtd) {
-        photon_view.RPC("RPC_EnableSiloPlacement",RpcTarget.All, BitConverter.GetBytes(is_on), BitConverter.GetBytes(qtd));
+        photon_view.RPC("RPC_ToggleSiloPlacement",RpcTarget.All, BitConverter.GetBytes(is_on), BitConverter.GetBytes(qtd));
     }
 
-    [PunRPC]  void RPC_EnableSiloPlacement(byte[] on_bytes, byte[] qtd_bytes) {
+    [PunRPC]  void RPC_ToggleSiloPlacement(byte[] on_bytes, byte[] qtd_bytes) {
         bool is_on = BitConverter.ToBoolean(on_bytes,0);
         int qtd = BitConverter.ToInt32(qtd_bytes,0);
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
@@ -50,6 +74,7 @@ public class MatchManager : MonoBehaviour
                 players[i].TogglePlacement(is_on, qtd);
     }
 #endregion
+#region  Map Display
     void UpdatePlayerMap() {
         PlayerManager[] p = GameManager.instance.listOfPlayersPlaying;
         Debug.Log("Updating map of "+p.Length+ " players!");
@@ -60,17 +85,6 @@ public class MatchManager : MonoBehaviour
             else
                 p[i].map_view.Clear();
         }
-    }
-    public void MatchStart(int player_quantity) {
-        if(!PhotonNetwork.IsMasterClient)
-            return;
-        StartCoroutine(CreateAndDistributeMap(player_quantity));
-        ToggleSiloPlacement(true, 5); 
-        StartCoroutine(Test());  
-    }
-    IEnumerator Test() {
-        yield return new WaitForSeconds(30);
-        ToggleSiloPlacement(false, 0);
     }
     IEnumerator CreateAndDistributeMap (int player_quantity) {
         int[] map_seed = new int[]{20*player_quantity, player_quantity, 75, UnityEngine.Random.Range(0,999999),UnityEngine.Random.Range(0,999999)};
@@ -94,4 +108,5 @@ public class MatchManager : MonoBehaviour
         Debug.Log("Received a map!");
         UpdatePlayerMap();
     }
+    #endregion
 }
