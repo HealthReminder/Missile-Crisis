@@ -34,18 +34,24 @@ public class MatchManager : MonoBehaviour
     DynamicMap[,] dynamic_map;
     public IEnumerator SharedLoop(int player_quantity) {
         //SET PLAYERS PLAYING
+        yield return new WaitForSeconds(1);
+        Debug.Log("Started shared loop of "+player_quantity+" players.");
         data.is_match_over = false;
         for (int i = 0; i < player_quantity; i++)
             if(GameManager.instance.listOfPlayersPlaying[i] != null){
                 PlayerManager p = GameManager.instance.listOfPlayersPlaying[i];
                 p.data.is_playing = true;
+                GameManager.instance.listOfPlayersPlaying[i] = p;
                 PlayerInMatch pm = new PlayerInMatch();
                 pm.player_id = i;
                 pm.is_dead = false;
                 pm.silos = new List<MapCellData>();
                 players_in_match.Add(pm);
+                
+                if(p.photon_view.IsMine)
+                    FocusPlayerCapital(i);
             }
-
+        Debug.Log("Started match loop.");
         while(!data.is_match_over) {
             if(!data.is_war_on) {
                 //SILO PLACEMENT
@@ -73,6 +79,19 @@ public class MatchManager : MonoBehaviour
                 EndGame();
             }
     }
+#region Camera Control
+    void FocusPlayerCapital(int player_id) {
+        for (int y = 0; y < data.map.GetLength(1); y++){
+            for (int x = 0; x < data.map.GetLength(0); x++){
+                if(data.map[x,y].is_capital)
+                    if(data.map[x,y].owner_id == player_id)
+                        if(GameManager.instance.listOfPlayersPlaying[player_id] != null)
+                            GameManager.instance.listOfPlayersPlaying[player_id].FocusCoordinates(x,y);
+            }
+        }
+
+    }
+#endregion
 #region End Game
     bool CheckEndGame (){
         bool may_end = false;
@@ -185,4 +204,10 @@ public class MatchManager : MonoBehaviour
         UpdatePlayerMap();
     }
     #endregion
+    PlayerInMatch GetPlayerInMatch(int player_id){
+        foreach (PlayerInMatch p in players_in_match)
+            if(p.player_id == player_id)
+                return(p);
+        return(new PlayerInMatch(){player_id = -1});
+    }
 }

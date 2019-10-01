@@ -16,8 +16,10 @@ using UnityEngine;
     //Type
     public int owner_id;
     //Conditions
+    public bool is_capital;
     public bool has_silo;
 	public bool is_nuked;
+    
     
 }
 
@@ -31,12 +33,13 @@ public static class MapGenerator
         MapCellData[,] new_map = new MapCellData[xsize,ysize];
         for (int y = 0; y < ysize; y++)
             for (int x = 0; x < xsize; x++)
-                new_map[x,y] = new MapCellData { has_silo = false, is_nuked = false };
+                new_map[x,y] = new MapCellData { has_silo = false, is_nuked = false , is_capital = false};
         
         for (int y = 0; y < ysize; y++)
             for (int x = 0; x < xsize; x++){
                 //new_map[x,y].type = s_map[x,y].type;
                 new_map[x,y].owner_id = d_map[x,y].owner_id;
+                new_map[x,y].is_capital = d_map[x,y].is_capital;
                 //new_map[x,y].adjacent_land = s_map[x,y].adjacent_land;
             }
         Debug.Log("Amassed map of size " + xsize + "/" + ysize);

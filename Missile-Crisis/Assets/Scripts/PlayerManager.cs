@@ -96,7 +96,17 @@ using UnityEngine.UI;
             }
         }
     }
-    
+    #region Camera
+    public void FocusCoordinates(int x, int y) {
+        if(map_view.cell_map != null)
+            if(map_view.cell_map[x,y] != null)
+                cam_behaviour.MoveFocus(map_view.cell_map[x,y].transform.position);
+            else
+                cam_behaviour.MoveFocus(new Vector3(x*10,y*10));
+        else
+                cam_behaviour.MoveFocus(new Vector3(x*10,y*10));
+    }
+    #endregion
     #region Loop
     void ShootMissile(int left_missiles, Vector2 coords) {
         byte[] qtd_bytes = BitConverter.GetBytes(left_missiles);
@@ -161,7 +171,7 @@ using UnityEngine.UI;
         } else {
             player_camera.gameObject.SetActive(true);
             if(gm.data.is_match_started){
-                data.is_playing = false;    
+                //data.is_playing = false;    
                 //Player is spectator   
                 //Turn off the waiting players canvas 
                 gm.match_start_view.ToggleClock(false);   

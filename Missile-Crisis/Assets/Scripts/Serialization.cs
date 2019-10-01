@@ -65,37 +65,17 @@ public static class Serialization
         cell.has_silo = BitConverter.ToBoolean(data_array[0],0);
         cell.is_nuked = BitConverter.ToBoolean(data_array[1],0);
         cell.owner_id = BitConverter.ToInt32(data_array[2],0);
+        cell.is_capital = BitConverter.ToBoolean(data_array[3],0);
 
-        Debug.Log(data_array.Length);
-        Debug.Log(data_array[4].Length);
-        byte[][] land_bytes = ArrayConcatenation.UnmergeArrays(data_array[4]);
-        List<Vector2> deserialized_coords = new List<Vector2>();
         return(cell);
     }
     static byte[] SerializeMapCell(MapCellData d) {
         //Create an array of the arrays you wanna serialize together
-        byte[][] arrays = new byte[5][];
+        byte[][] arrays = new byte[4][];
         arrays[0] = BitConverter.GetBytes(d.has_silo);
         arrays[1] = BitConverter.GetBytes(d.is_nuked);
         arrays[2] = BitConverter.GetBytes(d.owner_id);
-        //arrays[3] = BitConverter.GetBytes(d.type);
-        //get bytes for neighbours
-        List<byte[]> neighbour_bytes = new List<byte[]>();
-        //if(d.adjacent_land != null)
-            //for (int i = 0; i < d.adjacent_land.Length; i++)
-            //{
-                //byte[][] coordinates_byte = new byte[2][];
-                //coordinates_byte[0] = BitConverter.GetBytes(d.adjacent_land[i].x);
-                //coordinates_byte[1] = BitConverter.GetBytes(d.adjacent_land[i].y);
-                //neighbour_bytes.Add(ArrayConcatenation.MergeArrays(coordinates_byte));
-            //}
-        //else {
-            byte[] no_neighbours = new byte[1];
-            no_neighbours[0] = (byte)0;
-            neighbour_bytes.Add(no_neighbours);
-        //}
-        byte[] neighbour_array = ArrayConcatenation.MergeArrays(neighbour_bytes.ToArray());
-        arrays[4] = neighbour_array;
+        arrays[3] = BitConverter.GetBytes(d.is_capital);
         //Debug.Log("Serialized "+arrays.GetLength(0) + " arrays.");
         //Concatenate the arrays
         byte[] bytes = ArrayConcatenation.MergeArrays(arrays);
