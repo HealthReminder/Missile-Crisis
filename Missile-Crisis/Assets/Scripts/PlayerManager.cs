@@ -54,12 +54,10 @@ using UnityEngine.UI;
 
         //Move camera
         if(Input.GetMouseButtonDown(1)){
-            RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            if(hit.collider != null)
-            {
-                //Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000))
                 cam_behaviour.MoveFocus(hit.transform.position);
-            }
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0f ) {
             cam_behaviour.Zoom(Input.GetAxis("Mouse ScrollWheel"));
@@ -71,8 +69,9 @@ using UnityEngine.UI;
 
         if(Input.GetMouseButtonDown(0)){
             if(data.is_placing && data.left_silos > 0) { 
-                RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-                if(hit)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 1000))
                 if(hit.transform.GetComponent<BoardCell>()){
                     BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
                     if(selected_cell.owner_id == data.player_id && !selected_cell.has_silo) {
@@ -82,8 +81,9 @@ using UnityEngine.UI;
                     }
                 }
             } else if(MatchManager.instance.data.is_war_on && data.left_missiles > 0) {
-                RaycastHit2D hit = Physics2D.Raycast(player_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-                if(hit)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 1000))
                 if(hit.transform.GetComponent<BoardCell>()){
                     BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
                     if(selected_cell.owner_id != data.player_id) {

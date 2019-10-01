@@ -14,24 +14,23 @@ public class CameraBehaviour : MonoBehaviour
         if(!can_zoom)
             return;
 
-        float max_size = 120;
-        float min_size = 10;
-        float movement_velocity = 250;
-        float current_distance = camera.orthographicSize;
-        float progress = Mathf.InverseLerp(min_size,max_size,current_distance);
+        float movement_velocity = 1;
+        float min_y = 10;
+        float max_y = 100;
+        float current_y = transform.position.y;
         if(rate > 0) {
             if(!is_positive) {
                 is_positive = true;
             }
-            if(current_distance > min_size) {
-                camera.orthographicSize += smooth_curve.Evaluate(progress)*-movement_velocity*Time.deltaTime*10;
+            if(current_y > min_y) {
+                camera.transform.position += new Vector3(0,movement_velocity,0);
             }
         } else {
             if(is_positive) {
                 is_positive = false;
             }
-            if(current_distance < max_size) {
-                camera.orthographicSize += smooth_curve.Evaluate(1-progress)*movement_velocity*Time.deltaTime*5;
+            if(current_y < max_y) {
+                camera.transform.position -= new Vector3(0,movement_velocity,0);
             }
         }
     }
@@ -48,10 +47,10 @@ public class CameraBehaviour : MonoBehaviour
         float progress = 0;
         while(is_focusing) {
             Vector3 mid_pos = Vector3.Lerp(transform.position,focusing_transform.transform.position,progress*smooth_curve.Evaluate(progress));
-            transform.position = new Vector3(mid_pos.x,mid_pos.y,-200);
+            transform.position = new Vector3(mid_pos.x,60,mid_pos.z);
             progress+= Time.deltaTime*5;
             if(progress > 1){
-                transform.position = new Vector3(focusing_transform.transform.position.x,focusing_transform.transform.position.y,-200);
+                transform.position = new Vector3(mid_pos.x,60,mid_pos.z);
                 is_focusing = false;
             }
             yield return null;
