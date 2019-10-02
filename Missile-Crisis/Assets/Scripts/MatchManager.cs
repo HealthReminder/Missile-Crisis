@@ -130,7 +130,20 @@ public class MatchManager : MonoBehaviour
         Debug.Log("End game function");
     }
 #endregion
-#region Missile Gain
+#region Missile
+    public void ExplodeCells(Vector2[] coordinates){
+        Debug.Log("Sent "+coordinates.Length+" coordinates.");
+        photon_view.RPC("RPC_ExplodeCells",RpcTarget.All,Serialization.SerializeCoordinates(coordinates));
+    }
+    [PunRPC] void RPC_ExplodeCells(byte[] bytes){
+        Vector2[] coordinates = Serialization.DeserializeCoordinates(bytes);
+        Debug.Log("Received "+coordinates.Length+" coordinates.");
+        foreach (Vector2 v in coordinates)
+        {
+            data.map[(int)v.x,(int)v.y].is_nuked = true;
+        }
+        UpdatePlayerMap();
+    }
     public void AddMissileAll(int quantity) {
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
         for (int i = 0; i < players.Length; i++)

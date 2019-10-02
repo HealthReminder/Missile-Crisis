@@ -277,6 +277,8 @@ MonoBehaviour:
   player_camera: {fileID: 422429767448756976}
   cam_behaviour: {fileID: 6280164884096303579}
   map_view: {fileID: 9173339027253507555}
+  bomb_prefab: {fileID: 7920883951991865650, guid: 37e38e98521e98d46915cf55114700c0,
+    type: 3}
 --- !u!114 &1989414464114271604
 MonoBehaviour:
   m_ObjectHideFlags: 0

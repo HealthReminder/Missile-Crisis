@@ -39,6 +39,7 @@ using UnityEngine.UI;
     public Camera player_camera;
     public CameraBehaviour cam_behaviour;
     public MapView map_view;
+    public GameObject bomb_prefab;
     private void Start() {
         if(!photonView.IsMine) 
             return;
@@ -61,7 +62,6 @@ using UnityEngine.UI;
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0f ) {
             cam_behaviour.Zoom(Input.GetAxis("Mouse ScrollWheel"));
-            
         }
             
         if(!data.is_playing)
@@ -111,17 +111,20 @@ using UnityEngine.UI;
     void ShootMissile(int left_missiles, Vector2 coords) {
         byte[] qtd_bytes = BitConverter.GetBytes(left_missiles);
         byte[] id_bytes = BitConverter.GetBytes(data.player_id);
-        byte[] x_bytes = BitConverter.GetBytes((int)coords.x);
-        byte[] y_bytes = BitConverter.GetBytes((int)coords.y);
-        photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,x_bytes,y_bytes);
+        Vector3 impact_pos = map_view.cell_map[(int)coords.x,(int)coords.y].transform.position;
+        byte[] x_bytes = BitConverter.GetBytes(impact_pos.x);
+        byte[] y_bytes = BitConverter.GetBytes(impact_pos.y);
+        byte[] z_bytes = BitConverter.GetBytes(impact_pos.z);
+
+        photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,x_bytes,y_bytes,z_bytes);
 
     }
-    [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] x_bytes, byte[] y_bytes) {
+    [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] x_bytes, byte[] y_bytes, byte[] z_bytes) {
         int left_missiles = BitConverter.ToInt32(qtd_bytes,0);
         int player_id = BitConverter.ToInt32(id_bytes,0);
-        int x = BitConverter.ToInt32(x_bytes,0);
-        int y = BitConverter.ToInt32(y_bytes,0);
-        MatchManager.instance.data.map[x,y].is_nuked = true;
+        NuclearBombView bomb = Instantiate(bomb_prefab,new Vector3(BitConverter.ToSingle(x_bytes,0),BitConverter.ToSingle(y_bytes,0),BitConverter.ToSingle(z_bytes,0)),Quaternion.identity).GetComponent<NuclearBombView>();
+        int random_size = UnityEngine.Random.Range(1,4);
+        bomb.Explode(random_size);
         data.left_missiles = left_missiles;
         if(!photon_view.IsMine)
             return;

@@ -23,6 +23,29 @@ public static class Serialization
         result_data.is_match_over = BitConverter.ToBoolean(data_array[2],0);
         return(result_data);
     }
+    public static byte[] SerializeCoordinates(Vector2[] coordinates) {
+        byte[][] bytes = new byte[coordinates.Length*2][];
+        //Debug.Log("Serializing "+coordinates.Length+" coordinates into "+bytes.Length);
+        for (int i = 0; i < coordinates.Length;i++){
+            bytes[i] = BitConverter.GetBytes(coordinates[i].x);
+            bytes[coordinates.Length+i] = BitConverter.GetBytes(coordinates[i].y);
+        }
+        return(ArrayConcatenation.MergeArrays(bytes));
+    }
+    public static Vector2[] DeserializeCoordinates(byte[] bytes) {
+        byte[][] bytes_arrays = ArrayConcatenation.UnmergeArrays(bytes);
+        Vector2[] coordinates = new Vector2[bytes_arrays.Length/2];
+        //Debug.Log("Deserializing "+coordinates.Length+" coordinates into "+bytes_arrays.Length);
+        for (int i = 0; i < coordinates.Length; i++)
+            coordinates[i] = new Vector2(-1,-1);
+        
+        for (int i = 0; i < coordinates.Length;i++){
+            coordinates[i].x = BitConverter.ToSingle(bytes_arrays[i],0);
+            coordinates[i].y = BitConverter.ToSingle(bytes_arrays[bytes_arrays.Length/2+i],0);
+        }
+
+        return(coordinates);
+    }
     #endregion
     #region GameManager
     public static byte[] SerializeGameData(GameData g_data) {
@@ -59,16 +82,6 @@ public static class Serialization
         Debug.Log("Finished deserializing map!");
         return(seed.ToArray());
     }
-    static MapCellData DeserializeMapCell(byte[] bytes) {
-        byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
-        MapCellData cell = new MapCellData();
-        cell.has_silo = BitConverter.ToBoolean(data_array[0],0);
-        cell.is_nuked = BitConverter.ToBoolean(data_array[1],0);
-        cell.owner_id = BitConverter.ToInt32(data_array[2],0);
-        cell.is_capital = BitConverter.ToBoolean(data_array[3],0);
-
-        return(cell);
-    }
     static byte[] SerializeMapCell(MapCellData d) {
         //Create an array of the arrays you wanna serialize together
         byte[][] arrays = new byte[4][];
@@ -81,6 +94,16 @@ public static class Serialization
         byte[] bytes = ArrayConcatenation.MergeArrays(arrays);
         Debug.Log(arrays.Length + " array length + bytes length"+ bytes.Length);
         return(bytes);
+    }
+    static MapCellData DeserializeMapCell(byte[] bytes) {
+        byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
+        MapCellData cell = new MapCellData();
+        cell.has_silo = BitConverter.ToBoolean(data_array[0],0);
+        cell.is_nuked = BitConverter.ToBoolean(data_array[1],0);
+        cell.owner_id = BitConverter.ToInt32(data_array[2],0);
+        cell.is_capital = BitConverter.ToBoolean(data_array[3],0);
+
+        return(cell);
     }
     #endregion
     #region PlayerData
