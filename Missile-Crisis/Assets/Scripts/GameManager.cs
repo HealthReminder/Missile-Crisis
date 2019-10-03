@@ -21,6 +21,7 @@ using UnityEngine;
     
     public static GameManager instance;
     [SerializeField]    public DoomsdayClockView match_start_view;
+    public Color[] colors_available; //This will be replaced with a color picker in game, synchronized.
     void Awake () {
         instance = this;
         //Setup
@@ -175,20 +176,8 @@ using UnityEngine;
         received_manager.data = new PlayerData();
         received_manager.data.Reset(received_name,receivedPhotonViewID,newPlayerIndex);
 
-        float color_distribution = 2f;
-        float[] color_values = new float[3];
-        for (int i = 0; i < color_values.Length; i++){
-            float new_value;
-            if(color_distribution >=1){
-                new_value = UnityEngine.Random.Range(0f,1f);
-                
-            } else 
-                new_value = UnityEngine.Random.Range(0f,color_distribution);
-            color_distribution-= new_value;
-            color_values[i] = new_value;
-        }
-        
-        received_manager.data.player_color = new Color(color_values[0],color_values[1],color_values[2],1);
+        int r = UnityEngine.Random.Range(0,colors_available.Length);
+        received_manager.data.player_color = colors_available[r];
 
         listOfPlayersPlaying[newPlayerIndex] = received_manager;        
         data.players_in_room = listOfPlayersPlaying.Length;

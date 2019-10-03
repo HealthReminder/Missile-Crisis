@@ -23,14 +23,14 @@ public class CameraBehaviour : MonoBehaviour
                 is_positive = true;
             }
             if(current_y > min_y) {
-                camera.transform.position -= new Vector3(0,movement_velocity,0);
+                camera.transform.position += camera.transform.forward*movement_velocity;
             }
         } else {
             if(is_positive) {
                 is_positive = false;
             }
             if(current_y < max_y) {
-                camera.transform.position += new Vector3(0,movement_velocity,0);
+                camera.transform.position -= camera.transform.forward*movement_velocity;
             }
         }
     }

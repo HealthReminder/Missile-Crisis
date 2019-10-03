@@ -123,8 +123,8 @@ using UnityEngine.UI;
         int left_missiles = BitConverter.ToInt32(qtd_bytes,0);
         int player_id = BitConverter.ToInt32(id_bytes,0);
         NuclearBombView bomb = Instantiate(bomb_prefab,new Vector3(BitConverter.ToSingle(x_bytes,0),BitConverter.ToSingle(y_bytes,0),BitConverter.ToSingle(z_bytes,0)),Quaternion.identity).GetComponent<NuclearBombView>();
-        int random_size = UnityEngine.Random.Range(1,4);
-        bomb.Explode(random_size);
+        //int random_size = UnityEngine.Random.Range(1,4);
+        bomb.Explode(1);
         data.left_missiles = left_missiles;
         if(!photon_view.IsMine)
             return;

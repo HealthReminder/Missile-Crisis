@@ -24,29 +24,29 @@ public class MapView : MonoBehaviour
                 cell.block_appearance.GetPropertyBlock(_propBlock);
                 if(cell.owner_id == -1){
                     if(!cell.is_nuked)
-                        _propBlock.SetColor("_Color",new Color(0,0,0.6f,1));
+                        _propBlock.SetColor("_Color",new Color(0.43f,0.6f,0.66f,1));
                     else
-                        _propBlock.SetColor("_Color", new Color(0,0,0.2f,1));
+                        _propBlock.SetColor("_Color",new Color(0.3f,0.35f,0.36f,1));
                 } else {
                     Color player_color = GameManager.instance.listOfPlayersPlaying[cell.owner_id].data.player_color;
                     if(cell.owner_id != player_id){
                         if(!cell.is_nuked)
                             _propBlock.SetColor("_Color",new Color(player_color.r,player_color.g,player_color.b,1));
                         else if(!cell.has_silo && cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r/2,player_color.g/2,player_color.b/2,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r*0.7f,player_color.g*0.7f,player_color.b*0.7f,1));
                         else if(cell.has_silo && cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r/3,player_color.g/3,player_color.b/3,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r*0.3f,player_color.g*0.3f,player_color.b*0.3f,1));
                         
                     }
                     else if(cell.owner_id == player_id){
                         if(cell.has_silo && !cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r,player_color.g,player_color.b,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r*0.5f,player_color.g*0.5f,player_color.b*0.5f,1));
                         else if(!cell.has_silo && !cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r/2,player_color.g/2,player_color.b/2,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r,player_color.g,player_color.b,1));
                         else if(!cell.has_silo && cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r/3,player_color.g/3,player_color.b/3,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r*0.7f,player_color.g*0.7f,player_color.b*0.7f,1));
                         else if(cell.has_silo && cell.is_nuked)
-                            _propBlock.SetColor("_Color",new Color(player_color.r/4,player_color.g/4,player_color.b/4,1));
+                            _propBlock.SetColor("_Color",new Color(player_color.r*0.3f,player_color.g*0.3f,player_color.b*0.3f,1));
                     }
                 }
                 cell.block_appearance.SetPropertyBlock(_propBlock);
