@@ -14,7 +14,9 @@ public class NuclearBombView : MonoBehaviour
     public Renderer flash_renderer;
 
     public void Explode(float size){
+        size = size+0.2f;
         is_exploded = true;
+        AudioController.instance.PlaySound("Bomb_Explosion",transform.position);
         StartCoroutine(CoreRoutine(0.01f,size));
         StartCoroutine(FlashRoutine(0.005f,size));
     }

@@ -54,7 +54,7 @@ public class TitleBehaviour : MonoBehaviour
                 if(title_wait >= title_delay) {
                     title_wait = 0;
                     title_obj.SetActive(false);
-                    AudioController.instance.PlaySound(AudioController.instance.GetSoundByName("Menu_Siren"),Vector3.zero);
+                    AudioController.instance.PlaySound("Menu_Siren",Vector3.zero);
                 } else
                     title_wait+=Time.deltaTime;
             else 

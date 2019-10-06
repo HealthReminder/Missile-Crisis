@@ -46,7 +46,8 @@ public class AudioController : MonoBehaviour {
         return (-1);
     }
 
-    public void PlaySound (int soundIndex, Vector3 soundPos) {
+    public void PlaySound (string soundName, Vector3 soundPos) {
+        int soundIndex = FindSound(soundName);
         //Checa se a posição do som é perto o suficiente do player
         if(!isInMenu)
             if (Vector3.Distance (soundPos, playerListener.transform.position) > maxListenerDistance) {
