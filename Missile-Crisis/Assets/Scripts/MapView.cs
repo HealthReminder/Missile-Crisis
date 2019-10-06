@@ -8,6 +8,7 @@ public class MapView : MonoBehaviour
     public Transform map_container;
     public GameObject cell_prefab;
     public BoardCell[,] cell_map;
+    public Color water_color;
 
     public bool is_drawing = false;
     public void UpdateMap(MapCellData[,] map, int player_id) {
@@ -24,9 +25,9 @@ public class MapView : MonoBehaviour
                 cell.block_appearance.GetPropertyBlock(_propBlock);
                 if(cell.owner_id == -1){
                     if(!cell.is_nuked)
-                        _propBlock.SetColor("_Color",new Color(0.43f,0.6f,0.66f,1));
+                        _propBlock.SetColor("_Color",water_color);
                     else
-                        _propBlock.SetColor("_Color",new Color(0.3f,0.35f,0.36f,1));
+                        _propBlock.SetColor("_Color",new Color(water_color.r*0.8f,water_color.g*0.8f,water_color.b*0.8f,1));
                 } else {
                     Color player_color = GameManager.instance.listOfPlayersPlaying[cell.owner_id].data.player_color;
                     if(cell.owner_id != player_id){

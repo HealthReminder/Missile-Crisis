@@ -13,47 +13,29 @@ public class LobbyView : MonoBehaviour
 
     public GameObject roomsContainer;
 
-    public GameObject connectButton,connectingPanel,menuContainer,roomListContainer, nameContainer;
-    //public GameObject optionsContainer;
-
-
-    
-    //public void OnConnectButtonClicked(GameObject entryObj) {
-    //    roomsContainer.SetActive(false);
-
-    //}
-
-    private void Start() {
-        menuContainer.SetActive(false);
-        roomListContainer.SetActive(false);
-    }
-
+    public GameObject menuContainer,roomListContainer;
+    public Image overlay;
     public void OnRoomEntryClicked(GameObject entryObj) {
         PhotonLobbyController.instance.JoinRoom(entryObj.name);
     }
 
-    #region MENU
-    public void OnBackToMenuClicked(){
-        menuContainer.SetActive(true);
-        roomListContainer.SetActive(false);
-    }
-    public void OnRoomListClicked(){
-        menuContainer.SetActive(false);
-        roomListContainer.SetActive(true);
-    }
-    #endregion
-
     #region INITIAL
     public void OnConnectedToMaster(){
-        connectButton.SetActive(false);
-        connectingPanel.SetActive(false);
-        nameContainer.SetActive(true);
-
+        StartCoroutine(FadeOverlayOut());
+        roomListContainer.SetActive(true);
+    }
+    IEnumerator FadeOverlayOut(){
+        while(overlay.color.a > 0){
+            overlay.color+= new Color(0,0,0,-0.05f);
+            yield return null;
+        }
+        overlay.gameObject.SetActive(false);
+        yield break;
     }
     public void OnConnectClicked(){
-        connectButton.SetActive(false);
-        menuContainer.SetActive(false);
-        connectingPanel.SetActive(true);
+        overlay.color += new Color(0,0,0,1);
+        overlay.gameObject.SetActive(true);
+        roomListContainer.SetActive(false);
     }
 
     #endregion

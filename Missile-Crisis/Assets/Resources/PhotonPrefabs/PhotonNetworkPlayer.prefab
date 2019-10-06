@@ -443,6 +443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map_container: {fileID: 4263655571904368847}
   cell_prefab: {fileID: 2338930957936680662}
+  water_color: {r: 0.7407885, g: 0.87035495, b: 0.8773585, a: 1}
   is_drawing: 0
 --- !u!1 &8425212745557431317
 GameObject:
@@ -488,7 +489,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.8862745, g: 0.8862745, b: 0.8862745, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}

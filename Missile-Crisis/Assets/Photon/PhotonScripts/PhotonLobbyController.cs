@@ -50,7 +50,8 @@ public class PhotonLobbyController : MonoBehaviourPunCallbacks
     }
 
 
-    public override void OnLeftRoom()
+#region Room
+     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -91,6 +92,7 @@ public class PhotonLobbyController : MonoBehaviourPunCallbacks
         Debug.Log("Room creation failed");
         CreateRoom();
     }
+#endregion
     
     //public int roomCount;
     public void Update() {

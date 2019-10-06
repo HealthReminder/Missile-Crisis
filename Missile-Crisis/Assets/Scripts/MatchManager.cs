@@ -32,7 +32,6 @@ public class MatchManager : MonoBehaviour
     [SerializeField] public List<PlayerInMatch> players_in_match;
     StaticMap[,] static_map;
     DynamicMap[,] dynamic_map;
-    public List<Color> colors_available;
     public IEnumerator SharedLoop(int player_quantity) {
         //SET PLAYERS PLAYING
         yield return new WaitForSeconds(1);
