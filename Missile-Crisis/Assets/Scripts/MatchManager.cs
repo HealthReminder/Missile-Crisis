@@ -136,7 +136,8 @@ public class MatchManager : MonoBehaviour
         for (int i = 0; i < players.Length; i++)
             if(players[i] != null)
                 players[i].data.is_playing = false;
-        photon_view.RPC("RPC_EndMatch",RpcTarget.AllViaServer, System.Text.Encoding.UTF8.GetBytes(player_name));
+        //photon_view.RPC("RPC_EndMatch",RpcTarget.AllViaServer, System.Text.Encoding.UTF8.GetBytes(player_name));
+        RPC_EndMatch(System.Text.Encoding.UTF8.GetBytes(player_name));
     }
     [PunRPC] void RPC_EndMatch(byte[] name_bytes) {
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
