@@ -76,7 +76,7 @@ public class MatchManager : MonoBehaviour
         if(data.can_match_end)
             if(CheckEndGame()){
                 data.can_match_end = false;
-                EndGame();
+                EndMatch(FindWinner());
             }
     }
 #region Camera Control
@@ -93,6 +93,15 @@ public class MatchManager : MonoBehaviour
     }
 #endregion
 #region End Game
+    string FindWinner() {
+        if(players_in_match.Count <= 0)
+            return("NO ONE");
+        PlayerInMatch current_winner = players_in_match[0];
+        for (int i = 0; i < players_in_match.Count; i++)  
+            if(!players_in_match[i].is_dead)
+                current_winner = players_in_match[i];
+        return (GameManager.instance.listOfPlayersPlaying[current_winner.player_id].data.player_name);
+    }
     bool CheckEndGame (){
         bool may_end = false;
         for (int i = 0; i < players_in_match.Count; i++)  {
@@ -122,22 +131,32 @@ public class MatchManager : MonoBehaviour
         }
         return may_end;
     }
-    void EndGame() {
+    void EndMatch(string player_name) {
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
         for (int i = 0; i < players.Length; i++)
             if(players[i] != null)
                 players[i].data.is_playing = false;
-        Debug.Log("End game function");
+        photon_view.RPC("RPC_EndMatch",RpcTarget.AllViaServer, System.Text.Encoding.UTF8.GetBytes(player_name));
+    }
+    [PunRPC] void RPC_EndMatch(byte[] name_bytes) {
+        PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
+        for (int i = 0; i < players.Length; i++)
+            if(players[i] != null)
+                players[i].data.is_playing = false;
+        
+        string received_name = System.Text.Encoding.UTF8.GetString(name_bytes);
+        StartCoroutine(EndView.instance.GUIIn(received_name));
+        Debug.Log("The winner is player: "+received_name);
     }
 #endregion
 #region Missile
     public void ExplodeCells(Vector2[] coordinates){
-        Debug.Log("Sent "+coordinates.Length+" coordinates.");
+        //Debug.Log("Sent "+coordinates.Length+" coordinates.");
         photon_view.RPC("RPC_ExplodeCells",RpcTarget.All,Serialization.SerializeCoordinates(coordinates));
     }
     [PunRPC] void RPC_ExplodeCells(byte[] bytes){
         Vector2[] coordinates = Serialization.DeserializeCoordinates(bytes);
-        Debug.Log("Received "+coordinates.Length+" coordinates.");
+       // Debug.Log("Received "+coordinates.Length+" coordinates.");
         foreach (Vector2 v in coordinates)
         {
             data.map[(int)v.x,(int)v.y].is_nuked = true;
@@ -185,7 +204,7 @@ public class MatchManager : MonoBehaviour
 #region  Map Display
     void UpdatePlayerMap() {
         PlayerManager[] p = GameManager.instance.listOfPlayersPlaying;
-        Debug.Log("Updating map of "+p.Length+ " players!");
+        //Debug.Log("Updating map of "+p.Length+ " players!");
         for (int i = 0; i < p.Length; i++)
         {
             if(p[i].photon_view.IsMine)

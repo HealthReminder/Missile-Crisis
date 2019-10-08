@@ -28,7 +28,7 @@ public class NuclearBombView : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
             if(colliders[i].GetComponent<BoardCell>())
                 coordinates.Add(colliders[i].GetComponent<BoardCell>().coordinates);
-        Debug.Log(colliders.Length +" with sphere of size "+size/2);
+        //Debug.Log(colliders.Length +" with sphere of size "+size/2);
         MatchManager.instance.ExplodeCells(coordinates.ToArray());
         
     }
@@ -54,7 +54,6 @@ public class NuclearBombView : MonoBehaviour
             }
             yield return null;
         }
-        Debug.Log("Flash dissipated");
         yield break;
     }
 

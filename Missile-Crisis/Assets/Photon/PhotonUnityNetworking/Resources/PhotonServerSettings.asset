@@ -51,5 +51,6 @@ MonoBehaviour:
   - RPC_ShootMissile
   - RPC_EnableSharedLoop
   - RPC_ExplodeCells
+  - RPC_EndMatch
   DisableAutoOpenWizard: 1
   ShowSettings: 1
