@@ -9,7 +9,9 @@ using UnityEngine.Audio;
     public float defaultVolume;
     [Range (0.5f, 4)]
     public float defaultPitch;
-    [Range (1, 5)]
+    [Range (0, 2)]
+    public float pitchModularVariation;
+    [Range (0, 1)]
     public int minDistance;
     public AudioClip audioClip;
 }
@@ -58,17 +60,19 @@ public class AudioController : MonoBehaviour {
             Debug.Log ("Can't find sound");
             return;
         }
-
-        audioSources[currentSource].transform.position = soundPos;
+        Sound c = availableSounds[soundIndex];
+        AudioSource s = audioSources[currentSource];
+        s.transform.position = soundPos;
         if(isInMenu)
-            audioSources[currentSource].spatialBlend = 0;
-        audioSources[currentSource].Stop ();
-        audioSources[currentSource].clip = availableSounds[soundIndex].audioClip;
-        audioSources[currentSource].minDistance = availableSounds[soundIndex].minDistance;
-        audioSources[currentSource].volume = availableSounds[soundIndex].defaultVolume;
-        audioSources[currentSource].pitch = availableSounds[soundIndex].defaultPitch;
-        audioSources[currentSource].spatialBlend = 1;
-        audioSources[currentSource].Play ();
+            s.spatialBlend = 0;
+        s.Stop ();
+        s.clip = c.audioClip;
+        s.minDistance = c.minDistance;
+        s.volume = c.defaultVolume;
+        s.pitch = c.defaultPitch;
+        s.pitch = s.pitch + Random.Range(-c.pitchModularVariation,c.pitchModularVariation);
+        s.spatialBlend = 1;
+        s.Play ();
 
         currentSource++;
         if (currentSource >= audioSources.Count) {

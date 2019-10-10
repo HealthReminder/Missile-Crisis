@@ -48,7 +48,8 @@ public class TitleBehaviour : MonoBehaviour
     }
     float title_delay = 3;
     IEnumerator TitleRoutine() {
-        SoundtrackController.instance.ChangeSet("Intro");
+        if(SoundtrackController.instance)
+            SoundtrackController.instance.ChangeSet("Intro");
         float title_wait = title_delay/2;
         while(is_on) {
             if(title_obj.activeSelf)

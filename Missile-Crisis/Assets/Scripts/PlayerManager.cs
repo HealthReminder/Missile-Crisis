@@ -41,12 +41,23 @@ using UnityEngine.UI;
     public ScreenShakeBehaviour shake_behaviour;
     public MapView map_view;
     public GameObject bomb_prefab;
+    public List<Transform> bombing_areas;
+    public GameObject bombing_area_prefab;
     private void Start() {
         if(!photonView.IsMine) 
             return;
         StartCoroutine(WaitSetup(1));
+        StartCoroutine(PlayerLoop());
     }  
-
+    IEnumerator PlayerLoop(){
+        while(true) {
+            if(data.is_playing){
+                for (int i = 0; i < bombing_areas.Count; i++)
+                    bombing_areas[i].transform.localScale += new Vector3(0.5f,0.5f,0.5f);
+            }
+            yield return new WaitForSeconds(2);
+        }
+    }
     private void Update() {
         if(!is_setup)
             return;
@@ -79,21 +90,32 @@ using UnityEngine.UI;
                         data.left_silos--;
                         selected_cell.has_silo = true;
                         MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
+                        Transform new_area = Instantiate(bombing_area_prefab,selected_cell.transform.position+new Vector3(0,0.55f,0),Quaternion.identity).transform;
+                        bombing_areas.Add(new_area);
+                        new_area.gameObject.SetActive(true);
+                        new_area.parent = selected_cell.transform;
                     }
                 }
             } else if(MatchManager.instance.data.is_war_on && data.left_missiles > 0) {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000))
-                if(hit.transform.GetComponent<BoardCell>()){
-                    BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
-                    if(selected_cell.owner_id != data.player_id) {
-                        //Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
-                        data.left_missiles--;
-                        ShootMissile(data.left_missiles,selected_cell.coordinates);
+                if (Physics.Raycast(ray, out hit, 1000)){
+                    bool in_bound = false;
+                    for (int k = 0; k < bombing_areas.Count; k++)
+                    {
+                        if(bombing_areas[k].GetChild(0).GetComponent<SphereCollider>().bounds.Contains(hit.point))
+                            in_bound = true;
                     }
+                    if(in_bound)
+                        if(hit.transform.GetComponent<BoardCell>()){
+                            BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
+                            if(selected_cell.owner_id != data.player_id) {
+                                //Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
+                                data.left_missiles--;
+                                ShootMissile(data.left_missiles,selected_cell.coordinates);
+                            }
+                        }
                 }
-                
             }
         }
     }
@@ -149,6 +171,7 @@ using UnityEngine.UI;
     #region Setup
     //SETUP - BEFORE THE ADVENTURE GET STARTED
     IEnumerator WaitSetup(float seconds){
+        bombing_areas = new List<Transform>();
         //OVERLAY
         yield return new WaitForSeconds(seconds);
         Setup();

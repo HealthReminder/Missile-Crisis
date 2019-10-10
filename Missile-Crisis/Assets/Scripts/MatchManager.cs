@@ -62,9 +62,10 @@ public class MatchManager : MonoBehaviour
                 data.can_match_end = true;
             }
             //MISSILE GAIN
+
             if(data.is_war_on) {
                 yield return new WaitForSeconds(5);
-                AddMissileAll(5);
+                AddMissileAll(5,1);
                 yield return null;
             }
             yield return null;
@@ -163,14 +164,13 @@ public class MatchManager : MonoBehaviour
     }
     [PunRPC] void RPC_ExplodeCells(byte[] bytes){
         Vector2[] coordinates = Serialization.DeserializeCoordinates(bytes);
-       // Debug.Log("Received "+coordinates.Length+" coordinates.");
+        // Debug.Log("Received "+coordinates.Length+" coordinates.");
         foreach (Vector2 v in coordinates)
-        {
             data.map[(int)v.x,(int)v.y].is_nuked = true;
-        }
+        
         UpdatePlayerMap();
     }
-    public void AddMissileAll(int quantity) {
+    public void AddMissileAll(int quantity, int type) {
         PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
         for (int i = 0; i < players.Length; i++)
             if(players[i] != null)

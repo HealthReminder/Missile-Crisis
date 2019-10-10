@@ -24,6 +24,8 @@ public class MapView : MonoBehaviour
                 cell.is_nuked = map[o,i].is_nuked;
                 MaterialPropertyBlock _propBlock = new MaterialPropertyBlock();
                 cell.block_appearance.GetPropertyBlock(_propBlock);
+
+                //Change position if nuked
                 if(cell.is_nuked)
                     cell.transform.position = new Vector3(cell.transform.position.x,-1,cell.transform.position.z);
                 else
@@ -54,8 +56,12 @@ public class MapView : MonoBehaviour
                             _propBlock.SetColor("_Color",new Color(player_color.r,player_color.g,player_color.b,1));
                         else if(!cell.has_silo && cell.is_nuked)
                             _propBlock.SetColor("_Color",new Color(player_color.r*0.7f,player_color.g*0.7f,player_color.b*0.7f,1));
-                        else if(cell.has_silo && cell.is_nuked)
+                        else if(cell.has_silo && cell.is_nuked){
                             _propBlock.SetColor("_Color",new Color(player_color.r*0.3f,player_color.g*0.3f,player_color.b*0.3f,1));
+                            //Disable child if silo and destroyed
+                            if(cell.transform.GetChild(1).gameObject.activeSelf)
+                                cell.transform.GetChild(1).gameObject.SetActive(false);
+                        }
                     }
                 }
                 cell.block_appearance.SetPropertyBlock(_propBlock);
