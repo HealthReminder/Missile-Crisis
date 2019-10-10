@@ -24,6 +24,11 @@ public class MapView : MonoBehaviour
                 cell.is_nuked = map[o,i].is_nuked;
                 MaterialPropertyBlock _propBlock = new MaterialPropertyBlock();
                 cell.block_appearance.GetPropertyBlock(_propBlock);
+                if(cell.is_nuked)
+                    cell.transform.position = new Vector3(cell.transform.position.x,-1,cell.transform.position.z);
+                else
+                    cell.transform.position = new Vector3(cell.transform.position.x,0,cell.transform.position.z);
+
                 if(cell.owner_id == -1){
                     _propBlock.SetTexture("_MainTex",water_texture);
                     if(!cell.is_nuked)

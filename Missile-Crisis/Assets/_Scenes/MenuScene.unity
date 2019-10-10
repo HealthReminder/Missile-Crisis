@@ -2066,11 +2066,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundtrackVolume: 0.3
   sourceQuantity: 10
-  volumeRate: 0.01
+  volumeRate: 0.05
   sets:
   - name: Intro
     tracks:
-    - clip: {fileID: 8300000, guid: 70a7c846f56ec0d4ba965b7f41e7eb0c, type: 3}
+    - clip: {fileID: 8300000, guid: 89c2d10a63d1112498f96c388d2daae6, type: 3}
       startFrom: 0
 --- !u!4 &1537127353
 Transform:

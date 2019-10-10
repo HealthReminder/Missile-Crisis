@@ -38,6 +38,7 @@ using UnityEngine.UI;
     public PhotonView photon_view;  
     public Camera player_camera;
     public CameraBehaviour cam_behaviour;
+    public ScreenShakeBehaviour shake_behaviour;
     public MapView map_view;
     public GameObject bomb_prefab;
     private void Start() {
@@ -126,9 +127,9 @@ using UnityEngine.UI;
         //int random_size = UnityEngine.Random.Range(1,4);
         bomb.Explode(1);
         data.left_missiles = left_missiles;
+        MatchManager.instance.ShakePlayers();
         if(!photon_view.IsMine)
             return;
-
         map_view.UpdateMap(MatchManager.instance.data.map,data.player_id);
         //Debug.Log(player_id + " shot a missile on "+x+"/"+y+"and has "+left_missiles+" on stock.");
     }

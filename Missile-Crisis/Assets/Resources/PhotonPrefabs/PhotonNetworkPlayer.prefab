@@ -29,7 +29,7 @@ Transform:
   m_LocalPosition: {x: 18.6, y: 71.9, z: -14.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2553286632490161948}
+  - {fileID: 5952324777722827131}
   m_Father: {fileID: 5088286944111927623}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 62.632004, y: 0, z: 0}
@@ -276,6 +276,7 @@ MonoBehaviour:
   photon_view: {fileID: 1989414464114271604}
   player_camera: {fileID: 422429767448756976}
   cam_behaviour: {fileID: 6280164884096303579}
+  shake_behaviour: {fileID: 5060409524691390930}
   map_view: {fileID: 9173339027253507555}
   bomb_prefab: {fileID: 7920883951991865650, guid: 37e38e98521e98d46915cf55114700c0,
     type: 3}
@@ -460,6 +461,7 @@ GameObject:
   - component: {fileID: 8945403371812626647}
   - component: {fileID: 9082113792878662232}
   - component: {fileID: 591954470847919616}
+  - component: {fileID: 5060409524691390930}
   m_Layer: 9
   m_Name: Camera
   m_TagString: MainCamera
@@ -475,10 +477,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8425212745557431317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4, y: -25.3, z: 7.7}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4431907284067042033}
+  m_Father: {fileID: 5952324777722827131}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 62.632004, y: 0, z: 0}
 --- !u!20 &422429767448756976
@@ -608,3 +610,51 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &5060409524691390930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8425212745557431317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 449afecc8c5f386429754e9c04dc3d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maximumTranslationShake: {x: 1, y: 1, z: 1}
+  maximumAngularShake: {x: 0, y: 0, z: 0}
+  frequency: 10
+  traumaExponent: 1
+  recoverySpeed: 1
+--- !u!1 &9193709965987003280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5952324777722827131}
+  m_Layer: 9
+  m_Name: Shake
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5952324777722827131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193709965987003280}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.39999962, y: -25.300003, z: 7.699999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2553286632490161948}
+  m_Father: {fileID: 4431907284067042033}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

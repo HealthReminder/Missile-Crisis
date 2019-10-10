@@ -80,6 +80,12 @@ public class MatchManager : MonoBehaviour
             }
     }
 #region Camera Control
+    public void ShakePlayers() {
+        PlayerManager[] players = GameManager.instance.listOfPlayersPlaying;
+        for (int i = 0; i < players.Length; i++)
+            if(players[i].photon_view.IsMine)
+                players[i].shake_behaviour.InduceStress(1);
+    }
     void FocusPlayerCapital(int player_id) {
         for (int y = 0; y < data.map.GetLength(1); y++){
             for (int x = 0; x < data.map.GetLength(0); x++){
@@ -202,7 +208,7 @@ public class MatchManager : MonoBehaviour
                 players[i].TogglePlacement(is_on, qtd);
     }
 #endregion
-#region  Map Display
+#region Map Display
     void UpdatePlayerMap() {
         PlayerManager[] p = GameManager.instance.listOfPlayersPlaying;
         //Debug.Log("Updating map of "+p.Length+ " players!");
