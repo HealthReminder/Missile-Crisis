@@ -26,6 +26,10 @@ using UnityEngine.UI;
     }
 
 }
+public struct Silo {
+    public Transform silo_transform;
+    public Transform range_transform;
+}
 [System.Serializable]   public class PlayerManager : MonoBehaviourPun,IPunObservable
 {
     //Data
@@ -41,8 +45,8 @@ using UnityEngine.UI;
     public ScreenShakeBehaviour shake_behaviour;
     public MapView map_view;
     public GameObject bomb_prefab;
-    public List<Transform> bombing_areas;
-    public GameObject bombing_area_prefab;
+    public List<Silo> silos;
+    public GameObject silo_prefab;
     private void Start() {
         if(!photonView.IsMine) 
             return;
@@ -52,8 +56,8 @@ using UnityEngine.UI;
     IEnumerator PlayerLoop(){
         while(true) {
             if(data.is_playing){
-                for (int i = 0; i < bombing_areas.Count; i++)
-                    bombing_areas[i].transform.localScale += new Vector3(0.5f,0.5f,0.5f);
+                for (int i = 0; i < silos.Count; i++)
+                    silos[i].range_transform.localScale += new Vector3(0.5f,0.5f,0.5f);
             }
             yield return new WaitForSeconds(2);
         }
@@ -88,12 +92,17 @@ using UnityEngine.UI;
                     BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
                     if(selected_cell.owner_id == data.player_id && !selected_cell.has_silo) {
                         data.left_silos--;
+                        
                         selected_cell.has_silo = true;
                         MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
-                        Transform new_area = Instantiate(bombing_area_prefab,selected_cell.transform.position+new Vector3(0,0.55f,0),Quaternion.identity).transform;
-                        bombing_areas.Add(new_area);
-                        new_area.gameObject.SetActive(true);
-                        new_area.parent = selected_cell.transform;
+
+                        Silo new_silo = new Silo();
+                        new_silo.silo_transform = Instantiate(silo_prefab,selected_cell.transform.position+new Vector3(0,0.55f,0),Quaternion.identity).transform;
+                        new_silo.range_transform = new_silo.silo_transform.GetChild(0).GetChild(0);
+                        new_silo.silo_transform.gameObject.SetActive(true);
+                        new_silo.silo_transform.parent = selected_cell.transform;
+
+                        silos.Add(new_silo);
                     }
                 }
             } else if(MatchManager.instance.data.is_war_on && data.left_missiles > 0) {
@@ -101,9 +110,9 @@ using UnityEngine.UI;
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1000)){
                     bool in_bound = false;
-                    for (int k = 0; k < bombing_areas.Count; k++)
+                    for (int k = 0; k < silos.Count; k++)
                     {
-                        if(bombing_areas[k].GetChild(0).GetComponent<SphereCollider>().bounds.Contains(hit.point))
+                        if(silos[k].range_transform.GetComponent<SphereCollider>().bounds.Contains(hit.point))
                             in_bound = true;
                     }
                     if(in_bound)
@@ -145,11 +154,11 @@ using UnityEngine.UI;
     [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] x_bytes, byte[] y_bytes, byte[] z_bytes) {
         int left_missiles = BitConverter.ToInt32(qtd_bytes,0);
         int player_id = BitConverter.ToInt32(id_bytes,0);
-        NuclearBombView bomb = Instantiate(bomb_prefab,new Vector3(BitConverter.ToSingle(x_bytes,0),BitConverter.ToSingle(y_bytes,0),BitConverter.ToSingle(z_bytes,0)),Quaternion.identity).GetComponent<NuclearBombView>();
+        Vector3 received_pos = new Vector3(BitConverter.ToSingle(x_bytes,0),BitConverter.ToSingle(y_bytes,0),BitConverter.ToSingle(z_bytes,0));
+        NuclearBombView bomb = Instantiate(bomb_prefab, received_pos,Quaternion.identity).GetComponent<NuclearBombView>();
         //int random_size = UnityEngine.Random.Range(1,4);
-        bomb.Explode(1);
+        StartCoroutine(bomb.LaunchMissile(Vector3.zero,received_pos,1));
         data.left_missiles = left_missiles;
-        MatchManager.instance.ShakePlayers();
         if(!photon_view.IsMine)
             return;
         map_view.UpdateMap(MatchManager.instance.data.map,data.player_id);
@@ -171,7 +180,7 @@ using UnityEngine.UI;
     #region Setup
     //SETUP - BEFORE THE ADVENTURE GET STARTED
     IEnumerator WaitSetup(float seconds){
-        bombing_areas = new List<Transform>();
+        silos = new List<Silo>();
         //OVERLAY
         yield return new WaitForSeconds(seconds);
         Setup();

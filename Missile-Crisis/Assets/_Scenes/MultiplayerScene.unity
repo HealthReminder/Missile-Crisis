@@ -2215,6 +2215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b76b532958da94ea0796f3877f42f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_on: 0
   bouncy_curve:
     serializedVersion: 2
     m_Curve:
@@ -3434,7 +3435,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: RULES
+  m_Text: RULE
 --- !u!222 &1916183542
 CanvasRenderer:
   m_ObjectHideFlags: 0
