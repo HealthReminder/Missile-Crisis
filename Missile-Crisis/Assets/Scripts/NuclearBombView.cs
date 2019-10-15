@@ -15,9 +15,19 @@ public class NuclearBombView : MonoBehaviour
     public Transform core_transform;
     public Renderer core_renderer;
     public ParticleSystem core_particles;
+    public Gradient core_color;
     [Header("Flash")]
     public AnimationCurve smooth_curve;
     public Renderer flash_renderer;
+    [Header("Impact")]
+    public ParticleSystem impact_particles;
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.A))
+            StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(20,0,20),1));
+        if(Input.GetKeyDown(KeyCode.B))
+            StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(20,0,0),3));
+    }
+
     public IEnumerator LaunchMissile(Vector3 init_pos, Vector3 final_pos, float size) {
 
         float prog = 0;
@@ -30,8 +40,8 @@ public class NuclearBombView : MonoBehaviour
         }
 
         Explode(size);
-        yield return new WaitForSeconds(Random.Range(8f,10f));
-        Destroy(gameObject);
+        //yield return new WaitForSeconds(Random.Range(8f,10f));
+        //Destroy(gameObject);
         yield break;
     }
     void Explode(float size){
@@ -90,9 +100,11 @@ public class NuclearBombView : MonoBehaviour
         core_transform.localScale = new Vector3(0,0,0);
         _propBlock.SetColor("_Color",new Color(1,1,1,1f));
         core_renderer.SetPropertyBlock(_propBlock);
-        core_particles.startSize = size/4;
-        core_particles.startSpeed = size*1.5f;
+        core_particles.startSize = size/2;
+        core_particles.startSpeed = size;
+        impact_particles.startSpeed = size*2;
         core_particles.Play();
+        impact_particles.Play();
         bool shaked = false;
         while (true)
         {
@@ -111,16 +123,16 @@ public class NuclearBombView : MonoBehaviour
             yield return null;
         }
         
-        float current_alpha = 1f;
         SendCellsToMatchManager(size);
+        float prog = 0;
         while (true)
         {
-            if(current_alpha <= 0)
+            if(prog >=1 )
                 break;
             else {
-                _propBlock.SetColor("_Color",new Color(1,1,1,current_alpha));
+                _propBlock.SetColor("_Color",core_color.Evaluate(prog));
                 core_renderer.SetPropertyBlock(_propBlock);
-                current_alpha -= rate/2;
+                prog += rate/size*2;
             }
             yield return null;
         }
