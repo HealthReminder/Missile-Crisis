@@ -8,6 +8,21 @@ public static class Serialization
     //[SerializeField] public EnemyData serialize_event;
     //[SerializeField] public EnemyData deserialized_event
     #region MatchManager
+    public static byte[] SerializeVector3(Vector3 v) {
+        byte[][] arrays = new byte[3][];
+        arrays[0] = BitConverter.GetBytes(v.x);
+        arrays[1] = BitConverter.GetBytes(v.y);
+        arrays[2] = BitConverter.GetBytes(v.z);
+        return(ArrayConcatenation.MergeArrays(arrays));
+    }
+    public static Vector3 DeserializeVector3(byte[] bytes) {
+        Vector3 result_data = new Vector3();
+        byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
+        result_data.x = BitConverter.ToSingle(data_array[0],0);
+        result_data.y = BitConverter.ToSingle(data_array[1],0);
+        result_data.z = BitConverter.ToSingle(data_array[2],0);
+        return(result_data);
+    }
     public static byte[] SerializeMatchData(MatchData m_data) {
         byte[][] arrays = new byte[3][];
         arrays[0] = BitConverter.GetBytes(m_data.is_war_on);

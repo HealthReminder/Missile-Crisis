@@ -29,6 +29,7 @@ using UnityEngine.UI;
 public struct Silo {
     public Transform silo_transform;
     public Transform range_transform;
+    public Vector2 coords;
 }
 [System.Serializable]   public class PlayerManager : MonoBehaviourPun,IPunObservable
 {
@@ -101,6 +102,7 @@ public struct Silo {
                         new_silo.range_transform = new_silo.silo_transform.GetChild(0).GetChild(0);
                         new_silo.silo_transform.gameObject.SetActive(true);
                         new_silo.silo_transform.parent = selected_cell.transform;
+                        new_silo.coords = selected_cell.coordinates;
 
                         silos.Add(new_silo);
                     }
@@ -108,26 +110,48 @@ public struct Silo {
             } else if(MatchManager.instance.data.is_war_on && data.left_missiles > 0) {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000)){
-                    bool in_bound = false;
-                    for (int k = 0; k < silos.Count; k++)
-                    {
-                        if(silos[k].range_transform.GetComponent<SphereCollider>().bounds.Contains(hit.point))
-                            in_bound = true;
-                    }
-                    if(in_bound)
+                if (Physics.Raycast(ray, out hit, 1000))
+                    if(CheckBounds(hit.point))
                         if(hit.transform.GetComponent<BoardCell>()){
                             BoardCell selected_cell = hit.transform.GetComponent<BoardCell>();
                             if(selected_cell.owner_id != data.player_id) {
                                 //Debug.Log(data.player_id + " is trying to shoot a missile on "+selected_cell.coordinates+" having "+data.left_missiles+" on stock.");
                                 data.left_missiles--;
-                                ShootMissile(data.left_missiles,selected_cell.coordinates);
+                                ShootMissile(data.left_missiles,GetClosestSilo(hit.point).coords,selected_cell.coordinates);
                             }
                         }
-                }
             }
         }
     }
+    #region Input
+        Silo GetClosestSilo(Vector3 point) {
+            Silo closest_silo = new Silo();
+            if(silos.Count > 0)
+                closest_silo =  silos[0];
+            float closest_distance = 9999;
+            for (int k = 0; k < silos.Count; k++){
+                if(!GetSiloCell(silos[k].coords).is_nuked){
+                    float current_distance = Vector3.Distance(silos[k].silo_transform.position,point);
+                    if(current_distance <= closest_distance){
+                        closest_silo = silos[k];
+                        closest_distance = current_distance;
+                    }
+                }
+            }
+            return closest_silo;
+        }
+        MapCellData GetSiloCell(Vector2 silo_coords) {
+            if(MatchManager.instance)
+                return(MatchManager.instance.data.map[(int)silo_coords.x,(int)silo_coords.y]);
+            return(null);
+        }
+        bool CheckBounds(Vector3 point) {
+            for (int k = 0; k < silos.Count; k++)
+                if(silos[k].range_transform.GetComponent<SphereCollider>().bounds.Contains(point))
+                    return(true);
+            return(false);
+        }
+    #endregion
     #region Camera
     public void FocusCoordinates(int x, int y) {
         if(map_view.cell_map != null)
@@ -140,24 +164,25 @@ public struct Silo {
     }
     #endregion
     #region Loop
-    void ShootMissile(int left_missiles, Vector2 coords) {
+    void ShootMissile(int left_missiles, Vector2 init_coords, Vector2 end_coord) {
         byte[] qtd_bytes = BitConverter.GetBytes(left_missiles);
         byte[] id_bytes = BitConverter.GetBytes(data.player_id);
-        Vector3 impact_pos = map_view.cell_map[(int)coords.x,(int)coords.y].transform.position;
-        byte[] x_bytes = BitConverter.GetBytes(impact_pos.x);
-        byte[] y_bytes = BitConverter.GetBytes(impact_pos.y);
-        byte[] z_bytes = BitConverter.GetBytes(impact_pos.z);
+        Vector3 launch_pos = map_view.cell_map[(int)init_coords.x,(int)init_coords.y].transform.position;
+        Vector3 impact_pos = map_view.cell_map[(int)end_coord.x,(int)end_coord.y].transform.position;
+        byte[] i_bytes = Serialization.SerializeVector3(launch_pos);
+        byte[] e_bytes = Serialization.SerializeVector3(impact_pos);
 
-        photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,x_bytes,y_bytes,z_bytes);
+        photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,i_bytes,e_bytes);
 
     }
-    [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] x_bytes, byte[] y_bytes, byte[] z_bytes) {
+    [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] i_bytes, byte[] e_bytes) {
         int left_missiles = BitConverter.ToInt32(qtd_bytes,0);
         int player_id = BitConverter.ToInt32(id_bytes,0);
-        Vector3 received_pos = new Vector3(BitConverter.ToSingle(x_bytes,0),BitConverter.ToSingle(y_bytes,0),BitConverter.ToSingle(z_bytes,0));
-        NuclearBombView bomb = Instantiate(bomb_prefab, received_pos,Quaternion.identity).GetComponent<NuclearBombView>();
+        Vector3 init_pos = Serialization.DeserializeVector3(i_bytes);
+        Vector3 end_pos = Serialization.DeserializeVector3(e_bytes);
+        NuclearBombView bomb = Instantiate(bomb_prefab, init_pos,Quaternion.identity).GetComponent<NuclearBombView>();
         //int random_size = UnityEngine.Random.Range(1,4);
-        StartCoroutine(bomb.LaunchMissile(Vector3.zero,received_pos,1));
+        StartCoroutine(bomb.LaunchMissile(init_pos,end_pos,1));
         data.left_missiles = left_missiles;
         if(!photon_view.IsMine)
             return;
