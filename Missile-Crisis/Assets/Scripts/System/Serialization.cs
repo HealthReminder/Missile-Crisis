@@ -124,7 +124,7 @@ public static class Serialization
     }
     #endregion
     #region PlayerData
-    public static byte[] SerializePlayerData(PlayerData p_data) {
+    public static byte[] SerializePlayerData(PlayerLocalData p_data) {
         //Create an array of the arrays you wanna serialize together
         byte[][] arrays = new byte[8][];
         arrays[0] = System.Text.Encoding.UTF8.GetBytes(p_data.player_name);
@@ -145,8 +145,8 @@ public static class Serialization
 
         return(ArrayConcatenation.MergeArrays(arrays));
     }
-    public static PlayerData DeserializePlayerData(byte[] bytes) {
-        PlayerData result_data = new PlayerData();
+    public static PlayerLocalData DeserializePlayerData(byte[] bytes) {
+        PlayerLocalData result_data = new PlayerLocalData();
         byte[][] data_array = ArrayConcatenation.UnmergeArrays(bytes);
         //Debug.Log("Deserialized "+data_array.GetLength(0) + " arrays.");
         result_data.player_name = System.Text.Encoding.UTF8.GetString(data_array[0]);

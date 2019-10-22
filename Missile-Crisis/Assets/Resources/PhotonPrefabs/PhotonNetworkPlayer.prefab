@@ -280,6 +280,7 @@ MonoBehaviour:
   map_view: {fileID: 9173339027253507555}
   bomb_prefab: {fileID: 7920883951991865650, guid: 37e38e98521e98d46915cf55114700c0,
     type: 3}
+  silos: []
   silo_prefab: {fileID: 6017324584269900476, guid: e5dd850c558c3cc449915697f4391040,
     type: 3}
 --- !u!114 &1989414464114271604

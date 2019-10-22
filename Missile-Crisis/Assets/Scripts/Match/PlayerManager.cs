@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon;
 using System;
 using UnityEngine.UI;
-[System.Serializable] public class PlayerData {
+[System.Serializable] public class PlayerLocalData {
     public string player_name;
     public Color player_color;
     public int photon_view_id;
@@ -26,15 +26,11 @@ using UnityEngine.UI;
     }
 
 }
-public struct Silo {
-    public Transform silo_transform;
-    public Transform range_transform;
-    public Vector2 coords;
-}
+
 [System.Serializable]   public class PlayerManager : MonoBehaviourPun,IPunObservable
 {
     //Data
-    [SerializeField] public PlayerData data;
+    [SerializeField] public PlayerLocalData data;
 
     //Accountability
     public bool is_setup = false;
@@ -58,9 +54,9 @@ public struct Silo {
         while(true) {
             if(data.is_playing){
                 for (int i = 0; i < silos.Count; i++)
-                    silos[i].range_transform.localScale += new Vector3(0.2f,0.2f,0.2f);
+                    silos[i].range_transform.localScale += new Vector3(0.4f,0.4f,0.4f);
             }
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(3);
         }
     }
     private void Update() {
@@ -97,11 +93,11 @@ public struct Silo {
                         selected_cell.has_silo = true;
                         MatchManager.instance.PlaceSilo(selected_cell.coordinates, data.player_id);
 
-                        Silo new_silo = new Silo();
-                        new_silo.silo_transform = Instantiate(silo_prefab,selected_cell.transform.position+new Vector3(0,0.55f,0),Quaternion.identity).transform;
-                        new_silo.range_transform = new_silo.silo_transform.GetChild(0).GetChild(0);
-                        new_silo.silo_transform.gameObject.SetActive(true);
-                        new_silo.silo_transform.parent = selected_cell.transform;
+                        Silo new_silo = Instantiate(silo_prefab,selected_cell.transform.position+new Vector3(0,0.55f,0),Quaternion.identity).GetComponent<Silo>();
+                        new_silo.Setup(data.player_color);
+                        new_silo.range_transform = new_silo.transform.GetChild(0).GetChild(0);
+                        new_silo.transform.gameObject.SetActive(true);
+                        new_silo.transform.parent = selected_cell.transform;
                         new_silo.coords = selected_cell.coordinates;
 
                         silos.Add(new_silo);
@@ -131,7 +127,7 @@ public struct Silo {
             float closest_distance = 9999;
             for (int k = 0; k < silos.Count; k++){
                 if(!GetSiloCell(silos[k].coords).is_nuked){
-                    float current_distance = Vector3.Distance(silos[k].silo_transform.position,point);
+                    float current_distance = Vector3.Distance(silos[k].transform.position,point);
                     if(current_distance <= closest_distance){
                         closest_silo = silos[k];
                         closest_distance = current_distance;
@@ -180,7 +176,8 @@ public struct Silo {
         int player_id = BitConverter.ToInt32(id_bytes,0);
         Vector3 init_pos = Serialization.DeserializeVector3(i_bytes);
         Vector3 end_pos = Serialization.DeserializeVector3(e_bytes);
-        NuclearBombView bomb = Instantiate(bomb_prefab, init_pos,Quaternion.identity).GetComponent<NuclearBombView>();
+        BombView bomb = Instantiate(bomb_prefab, init_pos,Quaternion.identity).GetComponent<BombView>();
+        bomb.Setup(data.player_color);
         //int random_size = UnityEngine.Random.Range(1,4);
         StartCoroutine(bomb.LaunchMissile(init_pos,end_pos,1));
         data.left_missiles = left_missiles;

@@ -175,7 +175,7 @@ using UnityEngine;
         Debug.Log ("Adding new player with index of " + newPlayerIndex + " to the list of size " + listOfPlayersPlaying.Length);
         PlayerManager received_manager = playerView.GetComponent<PlayerManager>();
         Debug.Log(received_manager.photon_viewID);
-        received_manager.data = new PlayerData();
+        received_manager.data = new PlayerLocalData();
         received_manager.data.Reset(received_name,receivedPhotonViewID,newPlayerIndex);
 
         int r = UnityEngine.Random.Range(0,colors_available.Length);
@@ -210,7 +210,7 @@ using UnityEngine;
         data = received_game_data;
 
         //PlayerData
-        PlayerData received_player_data = Serialization.DeserializePlayerData(player_data_bytes);
+        PlayerLocalData received_player_data = Serialization.DeserializePlayerData(player_data_bytes);
         PhotonView received_photon_view = PhotonNetwork.GetPhotonView (received_player_data.photon_view_id);
         PlayerManager received_player_manager = received_photon_view.GetComponent<PlayerManager> ();
         received_player_manager.data = received_player_data;    

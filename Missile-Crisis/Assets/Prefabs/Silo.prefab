@@ -26,12 +26,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407886563982941311}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.196, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.23581712, w: 0.97179747}
+  m_LocalPosition: {x: 0.5464115, y: -1.0512673, z: 0.043810416}
+  m_LocalScale: {x: 1.9047978, y: 1.9047978, z: 1.904798}
   m_Children: []
-  m_Father: {fileID: 6017324584269900477}
-  m_RootOrder: 3
+  m_Father: {fileID: 6017324585191416043}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2156439118722076242
 MeshFilter:
@@ -123,7 +123,7 @@ Transform:
   m_Children:
   - {fileID: 3274920624841897880}
   m_Father: {fileID: 6017324585191416043}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 7.3780003}
 --- !u!33 &3274920624844797876
 MeshFilter:
@@ -394,6 +394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6017324584269900477}
+  - component: {fileID: 2178845474102867497}
   m_Layer: 0
   m_Name: Silo
   m_TagString: Untagged
@@ -415,10 +416,27 @@ Transform:
   - {fileID: 8162766554753309543}
   - {fileID: 6017324585191416043}
   - {fileID: 3195871459002324221}
-  - {fileID: 2933818182310498189}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2178845474102867497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6017324584269900476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3513a24340155704d933de29aefb9bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range_transform: {fileID: 8162766554753309543}
+  coords: {x: 0, y: 0}
+  renderers:
+  - {fileID: 1380535378632482579}
+  - {fileID: 3274920624843666804}
+  - {fileID: 3274920624843666808}
 --- !u!1 &6017324585191416042
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6017324585191416043}
   m_Layer: 0
-  m_Name: Cannon
+  m_Name: Appearances
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -446,6 +464,7 @@ Transform:
   m_LocalPosition: {x: -0.0019999743, y: 0.818, z: -0.023000032}
   m_LocalScale: {x: 0.5249901, y: 0.5249901, z: 0.52499}
   m_Children:
+  - {fileID: 2933818182310498189}
   - {fileID: 3274920624841897876}
   m_Father: {fileID: 6017324584269900477}
   m_RootOrder: 1

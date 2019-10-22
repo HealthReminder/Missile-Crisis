@@ -11,8 +11,9 @@ using System;
     public float match_time;
 }
 
-[System.Serializable] public struct PlayerInMatch {
+[System.Serializable] public struct PlayerData {
     public int player_id;
+    public Color player_color;
     public bool is_dead;
     public List<MapCellData> silos;
 
@@ -26,11 +27,11 @@ public class MatchManager : MonoBehaviour
         data.map = null;
         data.can_match_end = false;
         data.is_war_on = false;
-        players_in_match = new List<PlayerInMatch>();
+        players_in_match = new List<PlayerData>();
     }
     public PhotonView photon_view;
     [SerializeField] public MatchData data;
-    [SerializeField] public List<PlayerInMatch> players_in_match;
+    [SerializeField] public List<PlayerData> players_in_match;
     StaticMap[,] static_map;
     DynamicMap[,] dynamic_map;
     public IEnumerator SharedLoop(int player_quantity) {
@@ -43,7 +44,7 @@ public class MatchManager : MonoBehaviour
                 PlayerManager p = GameManager.instance.listOfPlayersPlaying[i];
                 p.data.is_playing = true;
                 GameManager.instance.listOfPlayersPlaying[i] = p;
-                PlayerInMatch pm = new PlayerInMatch();
+                PlayerData pm = new PlayerData();
                 pm.player_id = i;
                 pm.is_dead = false;
                 pm.silos = new List<MapCellData>();
@@ -112,7 +113,7 @@ public class MatchManager : MonoBehaviour
     string FindWinner() {
         if(players_in_match.Count <= 0)
             return("NO ONE");
-        PlayerInMatch current_winner = players_in_match[0];
+        PlayerData current_winner = players_in_match[0];
         for (int i = 0; i < players_in_match.Count; i++)  
             if(!players_in_match[i].is_dead)
                 current_winner = players_in_match[i];
@@ -121,7 +122,7 @@ public class MatchManager : MonoBehaviour
     bool CheckEndGame (){
         bool may_end = false;
         for (int i = 0; i < players_in_match.Count; i++)  {
-            PlayerInMatch p = players_in_match[i];
+            PlayerData p = players_in_match[i];
             //If the player is not out yet
             //Count its silos and compare to which are not destroyed
             //If all is destroyed kill it.
@@ -252,10 +253,10 @@ public class MatchManager : MonoBehaviour
         UpdatePlayerMap();
     }
     #endregion
-    PlayerInMatch GetPlayerInMatch(int player_id){
-        foreach (PlayerInMatch p in players_in_match)
+    PlayerData GetPlayerInMatch(int player_id){
+        foreach (PlayerData p in players_in_match)
             if(p.player_id == player_id)
                 return(p);
-        return(new PlayerInMatch(){player_id = -1});
+        return(new PlayerData(){player_id = -1});
     }
 }

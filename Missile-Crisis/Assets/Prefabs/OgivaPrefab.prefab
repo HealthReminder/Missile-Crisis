@@ -9976,6 +9976,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   flash_renderer: {fileID: 7920883951343973931}
   impact_particles: {fileID: 1940868492}
+  trail: {fileID: 1183814818269797439}
+  renderer: {fileID: 4887233319836445932}
 --- !u!96 &1183814818269797439
 TrailRenderer:
   serializedVersion: 2
