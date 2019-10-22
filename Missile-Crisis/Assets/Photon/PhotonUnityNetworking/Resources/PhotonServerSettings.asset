@@ -32,25 +32,15 @@ MonoBehaviour:
   - RPC_AddEntry
   - RPC_AddPlayer
   - RPC_CastStartVote
-  - RPC_EnableSiloPlacement
-  - RPC_GenerateStaticMap
-  - RPC_PlaceMissileSilo
+  - RPC_EnableSharedLoop
+  - RPC_EndMatch
+  - RPC_ExplodeCells
   - RPC_PlaceSilo
   - RPC_PlayerSetup
   - RPC_ReceiveMap
-  - RPC_ReceiveProjectiles
-  - RPC_ReceiveSilos
-  - RPC_ResetTimer
   - RPC_SetMasterClient
-  - RPC_ShowNotification
-  - RPC_SynchronizePlayer
-  - RPC_ToggleMissilePlacement
-  - RPC_UpdateDynamicMap
-  - RPC_UpdateNextBombGUI
-  - RPC_ToggleSiloPlacement
   - RPC_ShootMissile
-  - RPC_EnableSharedLoop
-  - RPC_ExplodeCells
-  - RPC_EndMatch
+  - RPC_SynchronizePlayer
+  - RPC_ToggleSiloPlacement
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -8,6 +8,7 @@ using System;
     public bool is_war_on;
     public bool is_match_over;
     public MapCellData[,] map; //Should be synchronized before match
+    public float match_time;
 }
 
 [System.Serializable] public struct PlayerInMatch {
@@ -55,20 +56,28 @@ public class MatchManager : MonoBehaviour
         while(!data.is_match_over) {
             if(!data.is_war_on) {
                 //SILO PLACEMENT
+                NotificationManager.instance.ShowMessage("PLACE YOUR SILOS",20);
+                NotificationManager.instance.ShowCountdown(20);
                 RPC_ToggleSiloPlacement(BitConverter.GetBytes(true), BitConverter.GetBytes(5));
-                yield return new WaitForSeconds(10);
+                yield return new WaitForSeconds(21);
                 RPC_ToggleSiloPlacement(BitConverter.GetBytes(false), BitConverter.GetBytes(0));
                 data.is_war_on = true;
                 data.can_match_end = true;
+                NotificationManager.instance.ShowMessage("NUKE 'EM!!",10);
             }
             //MISSILE GAIN
-
+            int missile_gain = 0;
+            
             if(data.is_war_on) {
                 yield return new WaitForSeconds(5);
-                AddMissileAll(5,1);
+                AddMissileAll(1+missile_gain,1);
+                missile_gain = (int)(data.match_time/10);
+                if(missile_gain >= 3)
+                    missile_gain = 3;
                 yield return null;
             }
             yield return null;
+            data.match_time += Time.deltaTime;
         }
         Debug.Log("Match loop ended.");
         yield break;

@@ -24,10 +24,11 @@ public static class Serialization
         return(result_data);
     }
     public static byte[] SerializeMatchData(MatchData m_data) {
-        byte[][] arrays = new byte[3][];
+        byte[][] arrays = new byte[4][];
         arrays[0] = BitConverter.GetBytes(m_data.is_war_on);
         arrays[1] = BitConverter.GetBytes(m_data.can_match_end);
         arrays[2] = BitConverter.GetBytes(m_data.is_match_over);
+        arrays[3] = BitConverter.GetBytes(m_data.match_time);
         return(ArrayConcatenation.MergeArrays(arrays));
     }
     public static MatchData DeserializeMatchData(byte[] bytes) {
@@ -36,6 +37,7 @@ public static class Serialization
         result_data.is_war_on = BitConverter.ToBoolean(data_array[0],0);
         result_data.can_match_end = BitConverter.ToBoolean(data_array[1],0);
         result_data.is_match_over = BitConverter.ToBoolean(data_array[2],0);
+        result_data.match_time = BitConverter.ToSingle(data_array[3],0);
         return(result_data);
     }
     public static byte[] SerializeCoordinates(Vector2[] coordinates) {

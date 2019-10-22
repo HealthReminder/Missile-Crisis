@@ -21,12 +21,12 @@ public class NuclearBombView : MonoBehaviour
     public Renderer flash_renderer;
     [Header("Impact")]
     public ParticleSystem impact_particles;
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.A))
-            StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(20,0,20),1));
-        if(Input.GetKeyDown(KeyCode.B))
-            StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(20,0,0),3));
-    }
+    //private void Update() {
+    //    if(Input.GetKeyDown(KeyCode.A))
+    //        StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(2,0,2),1));
+    //    if(Input.GetKeyDown(KeyCode.B))
+    //        StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(2,0,0),3));
+    //}
 
     public IEnumerator LaunchMissile(Vector3 init_pos, Vector3 final_pos, float size) {
 

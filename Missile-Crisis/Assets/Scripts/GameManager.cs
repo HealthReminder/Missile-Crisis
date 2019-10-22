@@ -20,7 +20,7 @@ using UnityEngine;
     public bool is_migrating_host = false;
     
     public static GameManager instance;
-    [SerializeField]    public DoomsdayClockView match_start_view;
+    [SerializeField]    public WaitView match_start_view;
     public Color[] colors_available; //This will be replaced with a color picker in game, synchronized.
     void Awake () {
         instance = this;
@@ -33,26 +33,23 @@ using UnityEngine;
     private void Update () {
         //This will ensure that every player is in the game before starting the game loop
         //This is fed by the room controller
-        
-
+        //CHANGE THIS NUMBER TO ENABLE SOLO PLAY!!!
         if(listOfPlayersPlaying != null)
             if(listOfPlayersPlaying.Length <= 0f){
                 match_start_view.TogglePlayerCounter(false);
                 return;
                 //Not enough players to start the game
             } else {
-                if(!data.is_match_started){
+                if (!data.is_match_started) {
                     match_start_view.TogglePlayerCounter(true);
-                    int votes_needed = 1;
-                    //int votes_needed = listOfPlayersPlaying.Length/2 + 1;
+                    //int votes_needed = 1;
+                    int votes_needed = listOfPlayersPlaying.Length/2 + 1;
                     //Check if there are enough votes to start the game
-                    if(CheckIfMatchCanStart(votes_needed)){
+                    if (CheckIfMatchCanStart(votes_needed)){
                         //Start game
                         match_start_view.ToggleClock(false);
                         data.is_match_started = true;
                         if(!PhotonNetwork.IsMasterClient)
-                            return;
-                        if(match_start_view.is_working_gui)
                             return;
                         StartCoroutine(CreateMapAndEnableSharedLoop(listOfPlayersPlaying.Length));  
                     } else {
@@ -72,6 +69,7 @@ using UnityEngine;
 #region Loop
     IEnumerator CreateMapAndEnableSharedLoop(int player_quantity) {
         yield return MatchManager.instance.CreateAndDistributeMap(player_quantity);  
+        Debug.Log("Map was created in Master Client. Sending it to players. <color=yellow>GameManager</color>.");
         photon_view.RPC("RPC_EnableSharedLoop",RpcTarget.All);
     }
     [PunRPC] void RPC_EnableSharedLoop() {
@@ -91,10 +89,14 @@ using UnityEngine;
         match_start_view.UpdateClock(GameManager.instance.listOfPlayersPlaying.Length, GameManager.instance.data.votes_to_start);    
     }
     bool CheckIfMatchCanStart(int votes_needed) {
-        if(data.votes_to_start >= votes_needed)
+        if(data.votes_to_start >= votes_needed){
+            Debug.Log("There are enough votes for game to start. <color=yellow>GameManager</color>.");
             return(true);
-        else
+        } else
             return(false);
+    }
+    private void Start() {
+        Debug.Log("Starting update in <color=yellow>GameManager</color>.");
     }
 #endregion
 #region Host migration
