@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &356048499612049705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356048499612049703}
+  - component: {fileID: 356048499612049702}
+  m_Layer: 0
+  m_Name: OSTController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &356048499612049703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356048499612049705}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 36.867188, y: 115.140625, z: -162.84375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &356048499612049702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356048499612049705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62fa717373d6cc4692e5cc4d469267e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundtrackVolume: 0.3
+  sourceQuantity: 10
+  volumeRate: 0.01
+  sets:
+  - name: Intro
+    tracks:
+    - clip: {fileID: 8300000, guid: 89c2d10a63d1112498f96c388d2daae6, type: 3}
+      startFrom: 0
+  - name: Start
+    tracks:
+    - clip: {fileID: 8300000, guid: afcc2e57cb079874f8f8a7dc628eeb35, type: 3}
+      startFrom: 0
+  - name: Early
+    tracks:
+    - clip: {fileID: 8300000, guid: 2a38317923afcbf42912dd5f4bd508b4, type: 3}
+      startFrom: 0
+  - name: Middle
+    tracks:
+    - clip: {fileID: 8300000, guid: 5e77a07f291a77d4e838f9d117d9b23f, type: 3}
+      startFrom: 0
+  - name: Late
+    tracks:
+    - clip: {fileID: 8300000, guid: 27c9c9c5cae2e7445bdbe10d415cffe2, type: 3}
+      startFrom: 0
+  - name: End_Lose
+    tracks:
+    - clip: {fileID: 8300000, guid: 27c9c9c5cae2e7445bdbe10d415cffe2, type: 3}
+      startFrom: 0
+  - name: End_Win
+    tracks:
+    - clip: {fileID: 8300000, guid: 557c9824a64c90d439601df6b47e9e86, type: 3}
+      startFrom: 0
