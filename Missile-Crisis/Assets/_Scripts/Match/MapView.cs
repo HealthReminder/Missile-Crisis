@@ -59,8 +59,10 @@ public class MapView : MonoBehaviour
                         else if(cell.has_silo && cell.is_nuked){
                             _propBlock.SetColor("_Color",new Color(player_color.r*0.3f,player_color.g*0.3f,player_color.b*0.3f,1));
                             //Disable child if silo and destroyed
-                            if(cell.transform.GetChild(1).gameObject.activeSelf)
+                            if(cell.transform.GetChild(1).gameObject.activeSelf){
                                 cell.transform.GetChild(1).gameObject.SetActive(false);
+                                AudioController.instance.PlaySound("Silo_Destroyed",Vector3.zero);
+                            }
                         }
                     }
                 }

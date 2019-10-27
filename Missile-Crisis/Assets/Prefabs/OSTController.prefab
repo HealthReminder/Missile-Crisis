@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62fa717373d6cc4692e5cc4d469267e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundtrackVolume: 0.3
+  soundtrackVolume: 0.2
   sourceQuantity: 10
-  volumeRate: 0.01
+  volumeRate: 0.001
   sets:
   - name: Intro
     tracks:
@@ -54,7 +54,7 @@ MonoBehaviour:
   - name: Start
     tracks:
     - clip: {fileID: 8300000, guid: afcc2e57cb079874f8f8a7dc628eeb35, type: 3}
-      startFrom: 0
+      startFrom: 2
   - name: Early
     tracks:
     - clip: {fileID: 8300000, guid: 2a38317923afcbf42912dd5f4bd508b4, type: 3}

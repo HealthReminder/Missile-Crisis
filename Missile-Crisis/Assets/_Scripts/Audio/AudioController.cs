@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 
 [System.Serializable] public struct Sound {
     public string name;
-    [Range (0.1f, 1)]
+    [Range (0.1f, 5)]
     public float defaultVolume;
     [Range (0.5f, 4)]
     public float defaultPitch;

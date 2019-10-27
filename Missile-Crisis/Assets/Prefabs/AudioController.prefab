@@ -60,4 +60,22 @@ MonoBehaviour:
     pitchModularVariation: 0.2
     minDistance: 5
     audioClip: {fileID: 8300000, guid: 6bf3281c2635224418554dad9a83cd55, type: 3}
+  - name: Silo_Destroyed
+    defaultVolume: 3
+    defaultPitch: 0.8
+    pitchModularVariation: 0.2
+    minDistance: 5
+    audioClip: {fileID: 8300000, guid: 16001151269aaa046a67b39705e8fe78, type: 3}
+  - name: Bomb_Received
+    defaultVolume: 1
+    defaultPitch: 1
+    pitchModularVariation: 0
+    minDistance: 5
+    audioClip: {fileID: 8300000, guid: 3eb333f483ef9a54b87be5693db1eb0e, type: 3}
+  - name: Bomb_Launched
+    defaultVolume: 1
+    defaultPitch: 1
+    pitchModularVariation: 0
+    minDistance: 5
+    audioClip: {fileID: 8300000, guid: cdf41e321b9bddf4ca5721e0a5b5a00c, type: 3}
   playerListener: {fileID: 0}

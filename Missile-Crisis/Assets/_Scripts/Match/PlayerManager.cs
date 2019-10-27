@@ -41,6 +41,7 @@ using UnityEngine.UI;
     public CameraBehaviour cam_behaviour;
     public ScreenShakeBehaviour shake_behaviour;
     public MapView map_view;
+    public InventoryView inventory_view;
     public GameObject bomb_prefab;
     public List<Silo> silos;
     public GameObject silo_prefab;
@@ -167,8 +168,12 @@ using UnityEngine.UI;
         Vector3 impact_pos = map_view.cell_map[(int)end_coord.x,(int)end_coord.y].transform.position;
         byte[] i_bytes = Serialization.SerializeVector3(launch_pos);
         byte[] e_bytes = Serialization.SerializeVector3(impact_pos);
-
+        
         photon_view.RPC("RPC_ShootMissile",RpcTarget.All,qtd_bytes,id_bytes,i_bytes,e_bytes);
+
+        if(inventory_view.gameObject.activeSelf)
+            inventory_view.RemoveBomb(0);
+        AudioController.instance.PlaySound("Bomb_Launched",Vector3.zero);
 
     }
     [PunRPC] void RPC_ShootMissile(byte[] qtd_bytes, byte[] id_bytes, byte[] i_bytes, byte[] e_bytes) {
@@ -188,6 +193,9 @@ using UnityEngine.UI;
     }
     public void InsertMissile(int qtd) {
         data.left_missiles += qtd;
+        if(inventory_view.gameObject.activeSelf)
+            inventory_view.AddBomb(0);
+        AudioController.instance.PlaySound("Bomb_Received",Vector3.zero);
     }
     #endregion
     #region Start
@@ -202,6 +210,7 @@ using UnityEngine.UI;
     #region Setup
     //SETUP - BEFORE THE ADVENTURE GET STARTED
     IEnumerator WaitSetup(float seconds){
+        inventory_view.gameObject.SetActive(false);
         silos = new List<Silo>();
         //OVERLAY
         yield return new WaitForSeconds(seconds);
@@ -212,6 +221,7 @@ using UnityEngine.UI;
     void Setup() {
         if(!photon_view.IsMine)
             return;    
+        inventory_view.gameObject.SetActive(true);
         photon_view.RPC("RPC_PlayerSetup",RpcTarget.All);
         PlayerManager[] p_list = GameManager.instance.listOfPlayersPlaying;
         foreach (PlayerManager p in p_list)
