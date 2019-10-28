@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09acf924e06849488d21b11ba3bc957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player_volume: 1
   isInMenu: 1
   isOn: 0
   sourceQuantity: 10
@@ -79,3 +80,5 @@ MonoBehaviour:
     minDistance: 5
     audioClip: {fileID: 8300000, guid: cdf41e321b9bddf4ca5721e0a5b5a00c, type: 3}
   playerListener: {fileID: 0}
+  mixer_group: {fileID: 243615120894814996, guid: ec72be810dc3d994a9176ac4f7d31772,
+    type: 2}

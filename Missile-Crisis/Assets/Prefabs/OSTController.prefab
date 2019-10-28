@@ -43,9 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62fa717373d6cc4692e5cc4d469267e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundtrackVolume: 0.2
+  player_volume: 1
+  default_volume: 1
   sourceQuantity: 10
   volumeRate: 0.001
+  mixer_group: {fileID: 243145830134749548, guid: ec72be810dc3d994a9176ac4f7d31772,
+    type: 2}
   sets:
   - name: Intro
     tracks:

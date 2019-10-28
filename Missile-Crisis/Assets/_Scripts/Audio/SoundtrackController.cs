@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundtrackController : MonoBehaviour {
-	
-	public float soundtrackVolume = 1;
+	public float default_volume = 1;
 	[Header("Configuration")]
 	//Quantity of sources that this script will be using to manage the sounds
 	[SerializeField]	int sourceQuantity = 10;
@@ -15,6 +15,7 @@ public class SoundtrackController : MonoBehaviour {
 	AudioSource[] audioSources;
 	int currentSource = 0;
 	bool changingSourceAlready = false;
+	public AudioMixerGroup mixer_group;
 
 	//Data
 	Set currentSet;
@@ -126,6 +127,7 @@ void Update()
 			Track newT =  currentSet.tracks[Random.Range(0,currentSet.tracks.Length)];
 			ns.clip = newT.clip;
 			ns.time = newT.startFrom;
+			ns.outputAudioMixerGroup = mixer_group;
 			ns.Play();
 			StartCoroutine(ChangeSources(cs,ns,volumeRate));
 			//stop last audio
@@ -142,19 +144,19 @@ void Update()
 	IEnumerator ChangeSources(AudioSource goingDown, AudioSource goingUp,float rate)
 	{
 		//This should never go wrong... He said
-		goingDown.volume = soundtrackVolume;
+		goingDown.volume = default_volume;
 		goingUp.volume = 0;
 		while(changingSourceAlready)
 			yield return null;
 		changingSourceAlready = true;
 		//If it doesnt then the music shall alternate!
-		while(goingDown.volume > 0 || goingUp.volume<soundtrackVolume){
+		while(goingDown.volume > 0 || goingUp.volume< default_volume){
 			changingSourceAlready =	 true;
 			goingDown.volume-=rate;
 			goingUp.volume+=rate;
 			yield return null;
 		}
-		goingUp.volume = soundtrackVolume;
+		goingUp.volume = default_volume;
 		goingDown.Stop();
 		goingDown.clip = null;
 		changingSourceAlready = false;

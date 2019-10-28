@@ -27,6 +27,7 @@ public class AudioController : MonoBehaviour {
     List<AudioSource> audioSources;
     int currentSource;
     public AudioListener playerListener;
+    public AudioMixerGroup mixer_group;
     public static AudioController instance;
     void Awake () {
         //Make it the only one
@@ -72,6 +73,7 @@ public class AudioController : MonoBehaviour {
         s.pitch = c.defaultPitch;
         s.pitch = s.pitch + Random.Range(-c.pitchModularVariation,c.pitchModularVariation);
         s.spatialBlend = 1;
+        s.outputAudioMixerGroup = mixer_group;
         s.Play ();
 
         currentSource++;
