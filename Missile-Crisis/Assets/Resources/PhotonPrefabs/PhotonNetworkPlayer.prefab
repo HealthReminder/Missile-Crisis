@@ -552,8 +552,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5072bd93c940a874fa0fc2daeea853a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  can_zoom: 1
   focusing_transform: {fileID: 5143113795585480077}
-  camera: {fileID: 422429767448756976}
   smooth_curve:
     serializedVersion: 2
     m_Curve:

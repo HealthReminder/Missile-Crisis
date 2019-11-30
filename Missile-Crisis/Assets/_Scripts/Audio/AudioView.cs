@@ -8,8 +8,8 @@ public class AudioView : MonoBehaviour
 {
     private void Awake() {
         DontDestroyOnLoad(gameObject);
-        audio_slider.value = PlayerPrefs.GetFloat("SoundVolume");
-        sountrack_slider.value = PlayerPrefs.GetFloat("SoundtrackVolume");
+        audio_slider.value = PlayerPrefs.GetFloat("SoundVolume",1);
+        sountrack_slider.value = PlayerPrefs.GetFloat("SoundtrackVolume",1);
     }
     public AudioMixer mixer;
 

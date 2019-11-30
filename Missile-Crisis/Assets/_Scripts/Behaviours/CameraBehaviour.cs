@@ -5,32 +5,25 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     bool is_focusing = false;
-    bool can_zoom = true;
+    public bool can_zoom = true;
     public Transform focusing_transform;
-    public Camera camera;
     public AnimationCurve smooth_curve;
-    bool is_positive = true;
     public void Zoom(float rate) {
         if(!can_zoom)
             return;
-
+        Debug.Log(rate);
         float movement_velocity = 1;
-        float min_y = 10;
-        float max_y = 100;
-        float current_y = transform.position.y;
+        float min_z = -10;
+        float max_z = 20;
+        float current_z = transform.localPosition.z;
+        rate = rate*-1;
         if(rate > 0) {
-            if(!is_positive) {
-                is_positive = true;
+            if(current_z > min_z) {
+                transform.localPosition += transform.forward*movement_velocity*-1;
             }
-            if(current_y > min_y) {
-                camera.transform.position += camera.transform.forward*movement_velocity;
-            }
-        } else {
-            if(is_positive) {
-                is_positive = false;
-            }
-            if(current_y < max_y) {
-                camera.transform.position -= camera.transform.forward*movement_velocity;
+        }else {
+            if(current_z < max_z) {
+                transform.localPosition += transform.forward*movement_velocity*1;
             }
         }
     }
@@ -46,11 +39,11 @@ public class CameraBehaviour : MonoBehaviour
 
         float progress = 0;
         while(is_focusing) {
-            Vector3 mid_pos = Vector3.Lerp(transform.position,focusing_transform.transform.position,progress*smooth_curve.Evaluate(progress));
-            transform.position = new Vector3(mid_pos.x,60,mid_pos.z);
+            Vector3 mid_pos = Vector3.Lerp(transform.localPosition,focusing_transform.transform.position,progress*smooth_curve.Evaluate(progress));
+            transform.localPosition = new Vector3(mid_pos.x,60,mid_pos.z);
             progress+= Time.deltaTime*5;
             if(progress > 1){
-                transform.position = new Vector3(mid_pos.x,60,mid_pos.z);
+                transform.localPosition = new Vector3(mid_pos.x,60,mid_pos.z);
                 is_focusing = false;
             }
             yield return null;

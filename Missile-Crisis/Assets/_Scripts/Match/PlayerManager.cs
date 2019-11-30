@@ -51,6 +51,7 @@ using UnityEngine.UI;
         StartCoroutine(WaitSetup(1));
         StartCoroutine(PlayerLoop());
     }  
+    //This makes the silos grow larger every 3 seconds
     IEnumerator PlayerLoop(){
         while(true) {
             if(data.is_playing){
@@ -226,6 +227,7 @@ using UnityEngine.UI;
         PlayerManager[] p_list = GameManager.instance.listOfPlayersPlaying;
         foreach (PlayerManager p in p_list)
             p.RPC_PlayerSetup();
+        cam_behaviour.can_zoom = true;
     }
     [PunRPC]public void RPC_PlayerSetup() {
         if(is_setup)
