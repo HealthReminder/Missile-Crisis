@@ -42,5 +42,7 @@ MonoBehaviour:
   - RPC_ShootMissile
   - RPC_SynchronizePlayer
   - RPC_ToggleSiloPlacement
+  - RPC_SelectCharacter
+  - RPC_ToggleCharacterSelection
   DisableAutoOpenWizard: 1
   ShowSettings: 1

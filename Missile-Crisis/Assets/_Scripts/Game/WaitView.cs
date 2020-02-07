@@ -13,14 +13,14 @@ using UnityEngine.UI;
     public AnimationCurve fade_curve;
     public Gradient color_gradient;
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.A))
-            UpdateClock(10,Random.Range(0,8));
+        //if(Input.GetKeyDown(KeyCode.A))
+            //UpdateClock(10,Random.Range(0,8));
         
-        if(Input.GetKeyDown(KeyCode.S))
-            TogglePlayerCounter(true);
+        //if(Input.GetKeyDown(KeyCode.S))
+            //TogglePlayerCounter(true);
         
-        if(Input.GetKeyDown(KeyCode.D))
-            ToggleClock(false);
+        //if(Input.GetKeyDown(KeyCode.D))
+            //ToggleClock(false);
         
     }
     public void UpdateClock(int player_quantity, int current_votes) {

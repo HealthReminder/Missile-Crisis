@@ -1565,6 +1565,7 @@ MonoBehaviour:
   photon_view: {fileID: 855928774}
   data:
     can_match_end: 0
+    is_character_selection: 0
     is_war_on: 0
     is_match_over: 0
     match_time: 0
@@ -2356,6 +2357,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NotificationManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5306388156387379821, guid: 0dae3dd98bb1ae3459bbc1bdd4415711,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5306388156387379823, guid: 0dae3dd98bb1ae3459bbc1bdd4415711,
         type: 3}
