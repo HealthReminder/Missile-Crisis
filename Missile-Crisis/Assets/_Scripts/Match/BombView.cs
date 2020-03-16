@@ -24,24 +24,26 @@ public class BombView : MonoBehaviour
     [Header("Appearance")]
     public TrailRenderer trail;
     public Renderer renderer;
-    //private void Update() {
-    //    if(Input.GetKeyDown(KeyCode.A))
-    //        StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(2,0,2),1));
-    //    if(Input.GetKeyDown(KeyCode.B))
-    //        StartCoroutine(LaunchMissile(Vector3.zero, new Vector3(2,0,0),3));
-    //}
-    
-    //This function is called by the players to setup things like the color of the trail
-    public void Setup(Color color) {
-        //Trail
-        color.a = 0.75f;
-        trail.startColor = color + new Color(0.1f,0.1f,0.1f,0);
-        trail.endColor = color + new Color(0.2f,0.2f,0.2f,0);
-        //Ogiva Color
-        MaterialPropertyBlock _propBlock = new MaterialPropertyBlock();
-        renderer.GetPropertyBlock(_propBlock);
-        _propBlock.SetColor("_Color",color - new Color(0.2f,0.2f,0.2f,-1));
-        renderer.SetPropertyBlock(_propBlock);
+    public void ShowGUI(bool is_on, Color color)
+    {
+        Debug.Log("ShouwGUI");
+        if (is_on)
+        {
+            //Trail
+            color.a = 0.75f;
+            trail.startColor = color + new Color(0.1f, 0.1f, 0.1f, 0);
+            trail.endColor = color + new Color(0.2f, 0.2f, 0.2f, 0);
+            //Ogiva Color
+            MaterialPropertyBlock _propBlock = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(_propBlock);
+            _propBlock.SetColor("_Color", color - new Color(0.2f, 0.2f, 0.2f, -1));
+            renderer.SetPropertyBlock(_propBlock);
+            Debug.Log("ShouwGUI ON");
+        } else
+        {
+            renderer.gameObject.SetActive(is_on);
+            trail.enabled = is_on; Debug.Log("ShouwGUI OFF");
+        }
     }
 
     public IEnumerator LaunchMissile(Vector3 init_pos, Vector3 final_pos, float size) {

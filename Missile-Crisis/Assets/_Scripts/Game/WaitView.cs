@@ -77,6 +77,7 @@ using UnityEngine.UI;
     IEnumerator TurnOffRoutine(){
 
         float prog = 0;
+        float timeout = 1000;
         while(prog <= 1) {
             float inverse_curve = fade_curve.Evaluate(1-prog);
 
@@ -94,8 +95,11 @@ using UnityEngine.UI;
 
             prog += Time.deltaTime/2;
             yield return null;
+            timeout -= Time.deltaTime;
+            if (timeout <= 0)
+                break;
         }
-
+        yield return null;
         view_container.SetActive(false);
 
         yield break;

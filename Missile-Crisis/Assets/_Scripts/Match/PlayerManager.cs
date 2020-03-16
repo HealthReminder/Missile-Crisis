@@ -130,6 +130,7 @@ using UnityEngine.UI;
                                 player_controller.ShootMissile (data.left_missiles, player_controller.GetClosestUnukedSilo (hit.point).coords, selected_cell.coordinates, map_view, data, photon_view);
                                 if (inventory_view.gameObject.activeSelf)
                                     inventory_view.RemoveBomb (0);
+                                AudioController.instance.PlaySound("Bomb_Launched",Vector3.zero);
                             }
                         }
             }
@@ -161,8 +162,12 @@ using UnityEngine.UI;
         Vector3 init_pos = Serialization.DeserializeVector3 (i_bytes);
         Vector3 end_pos = Serialization.DeserializeVector3 (e_bytes);
         BombView bomb = Instantiate (bomb_prefab, init_pos, Quaternion.identity).GetComponent<BombView> ();
-        bomb.Setup (data.player_color);
         //int random_size = UnityEngine.Random.Range(1,4);
+        Debug.Log("Bomb shot by player of Id: " + player_id);
+        if (GameManager.instance.listOfPlayersPlaying[player_id].photon_view.IsMine)
+            bomb.ShowGUI(true, data.player_color);
+        else
+            bomb.ShowGUI(false, data.player_color);
         StartCoroutine (bomb.LaunchMissile (init_pos, end_pos, 1));
         data.left_missiles = left_missiles;
         if (!photon_view.IsMine)
