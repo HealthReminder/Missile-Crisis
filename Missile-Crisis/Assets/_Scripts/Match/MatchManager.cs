@@ -18,7 +18,6 @@ using UnityEngine;
     public Color player_color;
     public bool is_dead;
     public List<MapCellData> silos;
-
 }
 public class MatchManager : MonoBehaviour {
     public static MatchManager instance;
@@ -92,7 +91,7 @@ public class MatchManager : MonoBehaviour {
             }
             yield return null;
         }
-        Debug.Log ("Match shared loop ended.  <color=yellow>MatchManager</color>.");
+        Debug.Log ("Match shared loop continuing.  <color=yellow>MatchManager</color>.");
         yield break;
     }
     void ChooseSoundtrack () {

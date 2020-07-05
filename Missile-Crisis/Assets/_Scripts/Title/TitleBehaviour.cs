@@ -44,6 +44,7 @@ public class TitleBehaviour : MonoBehaviour
             title_overlay.color += new Color(0,0,0,-0.01f);
             yield return null;
         }
+        title_overlay.color = new Color(0, 0, 0, 0);
         yield break;
     }
     float title_delay = 3;
